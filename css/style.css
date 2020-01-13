@@ -1,0 +1,48 @@
+html,body{
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+.wrapper{
+    width: 600px;
+    margin: 0 auto;
+}
+
+.st0{
+    fill:black ;
+    font-size: 5px;
+}
+
+.st8{
+   cursor: pointer;
+}
+
+.st10{
+    font-size: 7px;
+}
+
+.color-palate{
+    width:340px;
+    margin: 10px auto;
+    height: 40px;   
+}
+
+text{
+    cursor: pointer;
+}
+
+.color-box{
+    width: 80px;
+    height: 30px;
+    color: black;
+    display: inline-block;
+    text-align: center;
+    padding: 2px 0px;
+    font-weight: 600;
+}
+
+#red{background-color:#FF4C4C;}
+#green{background-color:#66B266;}
+#blue{background-color:#6666C7;}
+#yellow{background-color:#FFFF99;}
