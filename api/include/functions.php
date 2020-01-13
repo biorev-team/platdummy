@@ -22,4 +22,6 @@ $colorResult = mysqli_query($conn, $colorQuery);
         $array = json_encode($array);
         print_r( $array);
     }
+
+
 ?>
