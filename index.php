@@ -31,6 +31,9 @@ include("connection.php");
 
         <!--        Stylesheet-->
         <link rel="stylesheet" href="css/style.css" type="text/css">
+        <!--        FONT AWESOME-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" integrity="sha256-46qynGAkLSFpVbEBog43gvNhfrOj+BmwXdxFgVK/Kvc=" crossorigin="anonymous" />
+        
         
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -52,6 +55,7 @@ include("connection.php");
                 <div id="yellow" class="color-box">Blank</div>
                 
             </div>
+            
 <!--
              Button trigger modal 
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
@@ -82,6 +86,7 @@ include("connection.php");
 </div>
 -->
         </div>
+        <button class="reload-button"><i class="fas fa-redo-alt reload-icon"></i></button>
        
     </body>
         <!--        Bootstrap JavaScript-->
@@ -91,15 +96,15 @@ include("connection.php");
         <script type="text/javascript" src="js/index.js"></script>
         
     <script type="text/javascript">
-        
-        function fetch_data(){
+         
+        function test(){
         $.ajax({
             type: "POST",
             url: "functions.php",
             dataType:"json",
             
             success: function(result){
-                console.log(result);
+//                console.log(result);
   
                    $("g").each(function(){
                   var id =  $(this).attr("id");
@@ -114,8 +119,7 @@ include("connection.php");
                         
                          $("#" + (id)).find("rect").attr("fill",result[id-1].color);  
                         $("#" + (id)).find("rect").attr("stroke",result[id-1].color);  
-                       
-                       
+
                      if( result[id-1].status == "available" ){
                   
                   $("#"+(id)).click(function(){
@@ -186,7 +190,6 @@ include("connection.php");
 //                         
                         }
                        
-                       
                    });
 
                 
@@ -205,7 +208,16 @@ include("connection.php");
             
         })
         }
-        fetch_data();
+        test();
+       $(".reload-button").click(function(){
+            $(".reload-icon").toggleClass("rotate");
+            $( ".wrapper" ).load(window.location.href + " .wrapper",function(){
+               test(); 
+            });
+        });
+        
+      
+        
     
     </script>
 </html>
