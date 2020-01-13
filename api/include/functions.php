@@ -1,8 +1,7 @@
-
-
 <?php
-include("connection.php");
-
+include("dbConnect.php");
+$db_conn = new DB_Connect();
+$conn =$db_conn->connect();
 $array = array();
 $colorQuery ="SELECT availability.ID, availability.STATUS, color_status.COLOR, color_status.COLORID FROM availability INNER JOIN color_status ON availability.STATUS = color_status.STATUS";
 $colorResult = mysqli_query($conn, $colorQuery);

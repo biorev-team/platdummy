@@ -1,20 +1,5 @@
 
-<?php
-include("connection.php");
-//    
-//$array = array("sold","available","hold","blank");
-//    for( $i=0;$i<54;$i++) {    
-//        $rand_index = array_rand($array,1);
-//        $status = $array[$rand_index];
-//        $query = "INSERT INTO availabality (ID,STATUS) VALUES('NULL','$status')";
-//        if(mysqli_query($conn, $query)){
-//            echo"New Reccord";
-//        }
-//        else{
-//            echo"error";
-//        }
-//    }   
-?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -100,7 +85,7 @@ include("connection.php");
         function test(){
         $.ajax({
             type: "POST",
-            url: "functions.php",
+            url: "api/include/functions.php",
             dataType:"json",
             
             success: function(result){
