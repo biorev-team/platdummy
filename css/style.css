@@ -285,3 +285,24 @@ text{
     background: #00aff0;
     border-color: white;  
 }
+
+/*TOP BAR*/
+
+.top-bar{
+    width: 100%;
+    height: 60px;
+    background: white;
+    position: relative;
+    box-shadow:  0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.top-bar-logo{
+    width: 40px;
+    position: absolute;
+    top: 0px;
+    left: 30px;
+}
+
+.top-bar-logo{
+    
+}

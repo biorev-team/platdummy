@@ -2,7 +2,7 @@
 include("api/include/dbConnect.php");
 $dbCon = new DB_Connect();
 $conn = $dbCon->connect();
-
+session_start();
 if( !$_POST["email"] ){
     $emailError = "Please enter your email";
 }
@@ -27,9 +27,10 @@ if( isset($_POST["login"]) ){
              $dbPass  = $loginRow['hashed_password'];
              
              if($dbPass == $password){
-                 session_start();
+                 
                  $_SESSION['S_EMAIL'] = $dbEmail;
-//                 header("location:index.php");
+//                 echo $_SESSION['S_EMAIL'];
+                 header("location:admin-panel.php");
              }
         else{
                 $errorBox = "<div class='alert alert-danger' role='alert'>Please check your password</div>"; 
