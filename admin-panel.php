@@ -34,12 +34,25 @@ while( $builderRow = mysqli_fetch_array( $builderInfoResult ) ){
                     <td>$builderEmail</td>
                     <td>$builderContact</td>
                     <td>$builderArea</td>
-                    <td><button type='button' class='btn btn-block btn-outline-primary' value='$counter' name='edit'>Edit</button></td>
+                    <td><form method='post'><button type='submit' class='btn btn-block btn-outline-primary' value='$counter' name='edit'>Edit</button></form></td>
                 </tr>";
     $counter++;
     
 }
     }
+}
+
+if( isset( $_POST['edit'] ) ){
+    $btnValue = $_POST['edit'];
+    
+    $editBuilderQuery = "SELECT builder_id FROM builders_info WHERE builder_id = '$btnValue' AND status = 'active'";
+    $editBuilderResult = mysqli_query($conn, $editBuilderQuery);
+    $editBuilderRow = mysqli_fetch_array($editBuilderResult);
+    
+    $builderId    = $editBuilderRow['builder_id'];
+    
+    $_SESSION['S_BUILDER_ID'] = $builderId;
+    header("location:includes/edit-builder.php");
 }
 ?>
 <!DOCTYPE html>
@@ -136,6 +149,7 @@ while( $builderRow = mysqli_fetch_array( $builderInfoResult ) ){
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0 text-dark">Builders</h1>
+              <button id="add" style="width:150px; margin-top:10px;" type="submit" class="btn btn-block btn-outline-primary" >Add New Builder</button>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -221,6 +235,11 @@ while( $builderRow = mysqli_fetch_array( $builderInfoResult ) ){
 <!-- AdminLTE App -->
 <script src="AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
 <script src="AdminLTE-3.0.1/dist/js/demo.js"></script>
+    <script type="text/javascript">
+        $("#add").click(function(){
+            window.location.href="includes/new-builder.php"; 
+        });
+    </script>
 
     </body>
 </html>

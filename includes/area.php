@@ -37,7 +37,6 @@ while( $areaRow = mysqli_fetch_array( $areaResult ) ){
 }
 }
 ?>
-
 <!DOCTYPE html>
 <html>
     <head>

@@ -2,26 +2,8 @@
 include("../api/include/dbConnect.php");
 $dbConn = new DB_Connect();
 $conn = $dbConn->connect();
-session_start();
- $builderId = $_SESSION['S_BUILDER_ID'];
-$editBuilderQuery = "SELECT builders_info.email, builders_info.builder_name, builders_info.contact, areas_info.area_name, areas_info.lots, areas_info.primary_image FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active' AND builders_info.builder_id = '$builderId'";
-    
-    $editBuilderResult = mysqli_query($conn, $editBuilderQuery);
 
-    while( $editBuilderRow = mysqli_fetch_array($editBuilderResult) ){
-    
-    $builderName    = $editBuilderRow['builder_name'];
-    $builderEmail   = $editBuilderRow['email'];
-    $builderArea    = $editBuilderRow['area_name'];
-    $builderPrImage = $editBuilderRow['primary_image'];
-    $builderLots    = $editBuilderRow['lots'];
-    $builderContact = $editBuilderRow['contact'];
-        
-        if($builderPrImage == ""){
-            $builderPrImage = "https://www.freeiconspng.com/uploads/no-image-icon-11.PNG";
-        }
-}
-if( isset( $_POST['save'] ) ){
+if( isset( $_POST['add'] ) ){
     
     if( !$_POST['name'] ){
         $nameError = "Please enter your name";   
@@ -62,30 +44,29 @@ if( isset( $_POST['save'] ) ){
         $formImage = $_POST['fileToUpload'];
     }
     
-//    echo $builderId;
+    $emailQuery = "SELECT email FROM builders_info WHERE email = '$formEmail'";
+    $emailResult = mysqli_query($conn, $emailQuery);
+    if( mysqli_num_rows( $emailResult ) == 0 ){
+    
     if( $formName && $formEmail && $formContact && $formLots && $formImage && $formArea ){
-   $updateQuery = "UPDATE builders_info INNER JOIN areas_info ON ( builders_info.builder_id = areas_info.builder_id ) 
-   SET 
-        builders_info.builder_name = '$formName' ,
-        builders_info.contact      = '$formContact',
-        builders_info.email        = '$formEmail',
-        areas_info.area_name       = '$formArea',
-        areas_info.lots            = '$formLots',
-        areas_info.primary_image   = '../images/$formImage'
-        WHERE builders_info.builder_id = '$builderId' AND areas_info.builder_id = '$builderId'
-        ";
-    if(mysqli_query( $conn, $updateQuery )){
-        echo "<div class='alert alert-success'>Successfully Changed</div>";
-    }
+        $addBuilderQuery = "INSERT INTO builders_info (builder_id, builder_name, email, status, updated_at, created_at, contact) 
+                    VALUES (NULL,'$formName', '$formEmail', 'active', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '$formContact' ) ";
+        $addAreaQuery = "INSERT INTO areas_info ( area_id, builder_id, area_name, lots, primary_image, images, status, updated_at, created_at ) VALUES ( NULL, LAST_INSERT_ID() , '$formArea', '$formLots', '$formImage', '', 'active', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() )";
+        if( mysqli_query($conn, $addBuilderQuery) && mysqli_query($conn, $addAreaQuery) ){
+                 echo "<div class='alert alert-success'>Successfully Changed</div>";
+        }      
     else{
         echo "<div class='alert alert-danger'>Please check your internet connection or try again later.</div>";
-    }
+        }
+    
+        }
     }
     
     else{
-        echo "<div class='alert alert-danger'>No Updates Done</div>";
+                echo "<div class='alert alert-danger'>User already exist.</div>";
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -95,7 +76,7 @@ if( isset( $_POST['save'] ) ){
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Edit</title>
+        <title>Add New</title>
         
         <!--        Bootstrap-->
        <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/fontawesome-free/css/all.min.css">
@@ -178,12 +159,12 @@ if( isset( $_POST['save'] ) ){
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Edit Information</h1>
+            <h1 class="m-0 text-dark">Add New Builder</h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Builders</a></li>
-              <li class="breadcrumb-item active">Edit</li>
+              <li class="breadcrumb-item active">Add New</li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -199,6 +180,7 @@ if( isset( $_POST['save'] ) ){
                   <div class="form-group">
                     <label for="name">Name</label>
                     <input style="text-transform:capitalize;" type="text" class="form-control" id="name" placeholder="Enter name" value="<?php echo $builderName; ?>" name="name">
+                      <small><?php echo $nameError;?></small>
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
@@ -218,12 +200,11 @@ if( isset( $_POST['save'] ) ){
                   </div>
                     
                   <div class="form-group">
-                      <label>Primary Image</label><br>
-                    
+                    <label>Primary Image</label>
                     <div class="margin-bottom margin-top">
                         <input type="file" class="form-control" name="fileToUpload" id="avatar">
                         <small class="text-danger"> <?php echo $logoError; ?></small>
-                    </div> <br>
+                    </div><br> 
                       <label id="labelForAvatar" for="avatar">
                      <img src="<?php echo $builderPrImage; ?>" style="width:200px;" id="imgupload">
                     </label>
@@ -232,7 +213,7 @@ if( isset( $_POST['save'] ) ){
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary" name="save">Save Changes</button>
+                  <button type="submit" class="btn btn-primary" name="add">Add New</button>
                 </div>
               </form>
         <!-- /.row -->
