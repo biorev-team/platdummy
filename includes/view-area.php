@@ -16,11 +16,11 @@ while( $lotsRow = mysqli_fetch_array($lotsResult) ){
     $lotNumber = $lotsRow['alias'];
     $lotStatus = $lotsRow['lot_status'];
     $lotPrice  = $lotsRow['lot_price'];
-    
+    $lotId     = $lotsRow['lot_id'];
     $display.= "<tr>
-                    <td><input type = 'text' value='$lotNumber' class='inputs' disabled name='number' value='$counter'></td>
-                    <td><input type = 'text' value='$lotStatus' class='inputs' disabled name='status' value='$counter'></td>
-                    <td><input type = 'text' value='$lotPrice' class='inputs' disabled name='price' value='$counter'></td>
+                    <td><input type = 'text' value='$lotNumber' class='inputs' disabled name='number' ></td>
+                    <td><input type = 'text' value='$lotStatus' class='inputs' disabled name='status' ></td>
+                    <td><input type = 'text' value='$lotPrice' class='inputs' disabled name='price' ></td>
                     <td><button type='submit' class='btn btn-outline-primary edit' value='$counter' name='edit'>Edit</button>
                     <button style='visibility:hidden;' type='submit' class='btn btn-outline-success save' value='$counter' name='save'>Save</button>
                     <button style='visibility:hidden;' type='submit' class='btn btn-outline-danger cancel' value='$counter' name='cancel'>Cancel</button>
@@ -238,10 +238,14 @@ while( $lotsRow = mysqli_fetch_array($lotsResult) ){
         });
         
         $(".save").click(function(){
+            var lotNumber = $(this).parent().siblings().find("input[name=number]").val();
+            var lotStatus = $(this).parent().siblings().find("input[name=status]").val();
+            var lotPrice = $(this).parent().siblings().find("input[name=price]").val();
+            console.log(id);
             $.ajax({
                 type:"POST",
                 url: "../api/include/functions.php",
-                data: "check=edit",
+                data: "lotNumber=",
                 
                 success: function(result){
                 
