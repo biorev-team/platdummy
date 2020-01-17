@@ -255,8 +255,9 @@ $(document).ready(function(){
                         var builderContact  = result["data"][id]["contact"];
                         var builderStatus   = result["data"][id]["status"];
                         var builderArea     = result["data"][id]["area"];
+                        var email           = result["data"][id]["email"];
                         
-                        $("tbody").append("<tr><td>" + builderId + "</td><td>" +builderName + "</td><td></td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td><button type='button' class='btn btn-block btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button></td></tr>");
+                        $("tbody").append("<tr><td>" + builderId + "</td><td>" +builderName + "</td><td>" + email +"</td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td><button type='button' class='btn btn-block btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button></td></tr>");
                         id++;
                         
                   

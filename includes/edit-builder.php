@@ -197,15 +197,15 @@ $conn = $dbConn->connect();
                 <div class="card-body">
                   <div class="form-group">
                     <label for="name">Name</label>
-                    <input style="text-transform:capitalize;" type="text" class="form-control" id="name" placeholder="Enter name" value="<?php echo $builderName; ?>" name="name">
+                    <input style="text-transform:capitalize;" type="text" class="form-control" id="name" placeholder="Enter name" name="name">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter email" value="<?php echo $builderEmail; ?>" name="email">
+                    <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
                   </div>
                   <div class="form-group">
                     <label for="contact">Contact</label>
-                    <input type="text" class="form-control" id="contact" placeholder="Enter contact number" value="<?php echo $builderContact; ?>" name="contact">
+                    <input type="text" class="form-control" id="contact" placeholder="Enter contact number" name="contact">
                   </div>
                   
                 </div>

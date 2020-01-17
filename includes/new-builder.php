@@ -1,73 +1,4 @@
-<?php
-include("../api/include/dbConnect.php");
-$dbConn = new DB_Connect();
-$conn = $dbConn->connect();
 
-if( isset( $_POST['add'] ) ){
-    
-    if( !$_POST['name'] ){
-        $nameError = "Please enter your name";   
-        }
-    else{
-        $formName = $_POST['name'];
-    }
-    
-    if( !$_POST['email'] ){
-        $emailError = "Please enter your email";   
-    }
-    else{
-        $formEmail = $_POST['email'];
-    }
-    
-    if( !$_POST['contact'] ){
-        $contactError = "Please enter your contact";   
-}
-    else{
-        $formContact = $_POST['contact'];
-    }
-    if( !$_POST['area'] ){
-        $areaError = "Please enter your area";   
-}
-    else{
-        $formArea = $_POST['area'];
-    }
-    if( !$_POST['lots'] ){
-        $lotsError = "Please enter number of lots";   
-}
-    else{
-        $formLots = $_POST['lots'];
-    }
-    if( !$_POST['fileToUpload'] ){
-        $imageError = "Please select the image";   
-    }
-    else{
-        $formImage = $_POST['fileToUpload'];
-    }
-    
-    $emailQuery = "SELECT email FROM builders_info WHERE email = '$formEmail'";
-    $emailResult = mysqli_query($conn, $emailQuery);
-    if( mysqli_num_rows( $emailResult ) == 0 ){
-    
-    if( $formName && $formEmail && $formContact && $formLots && $formImage && $formArea ){
-        $addBuilderQuery = "INSERT INTO builders_info (builder_id, builder_name, email, status, updated_at, created_at, contact) 
-                    VALUES (NULL,'$formName', '$formEmail', 'active', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), '$formContact' ) ";
-        $addAreaQuery = "INSERT INTO areas_info ( area_id, builder_id, area_name, lots, primary_image, images, status, updated_at, created_at ) VALUES ( NULL, LAST_INSERT_ID() , '$formArea', '$formLots', '$formImage', '', 'active', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() )";
-        if( mysqli_query($conn, $addBuilderQuery) && mysqli_query($conn, $addAreaQuery) ){
-                 echo "<div class='alert alert-success'>Successfully Changed</div>";
-        }      
-    else{
-        echo "<div class='alert alert-danger'>Please check your internet connection or try again later.</div>";
-        }
-    
-        }
-    }
-    
-    else{
-                echo "<div class='alert alert-danger'>User already exist.</div>";
-    }
-}
-
-?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -179,41 +110,23 @@ if( isset( $_POST['add'] ) ){
                 <div class="card-body">
                   <div class="form-group">
                     <label for="name">Name</label>
-                    <input style="text-transform:capitalize;" type="text" class="form-control" id="name" placeholder="Enter name" value="<?php echo $builderName; ?>" name="name">
-                      <small><?php echo $nameError;?></small>
+                    <input style="text-transform:capitalize;" type="text" class="form-control" id="name" placeholder="Enter name" name="name">
+                      
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" value="<?php echo $builderEmail; ?>" name="email">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
                   </div>
                   <div class="form-group">
                     <label for="contact">Contact</label>
-                    <input type="text" class="form-control" id="contact" placeholder="Enter contact number" value="<?php echo $builderContact; ?>" name="contact">
+                    <input type="text" class="form-control" id="contact" placeholder="Enter contact number" name="contact">
                   </div>
-                  <div class="form-group">
-                    <label for="area">Area</label>
-                    <input type="text" class="form-control" id="area" placeholder="Enter area" value="<?php echo $builderArea; ?>" name="area">
-                  </div>
-                    <div class="form-group">
-                    <label for="lots">Total Lots in Area</label>
-                    <input type="text" class="form-control" id="lots" placeholder="Enter number of lots" value="<?php echo $builderLots; ?>" name="lots">
-                  </div>
-                    
-                  <div class="form-group">
-                    <label>Primary Image</label>
-                    <div class="margin-bottom margin-top">
-                        <input type="file" class="form-control" name="fileToUpload" id="avatar">
-                        <small class="text-danger"> <?php echo $logoError; ?></small>
-                    </div><br> 
-                      <label id="labelForAvatar" for="avatar">
-                     <img src="<?php echo $builderPrImage; ?>" style="width:200px;" id="imgupload">
-                    </label>
-                  </div>
+                  
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary" name="add">Add New</button>
+                  <button type="button" class="btn btn-primary" name="add" id="addButton">Add New</button>
                 </div>
               </form>
         <!-- /.row -->
@@ -254,6 +167,27 @@ if( isset( $_POST['add'] ) ){
 <!-- AdminLTE App -->
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
     <script type="text/javascript">
+        
+        $("#addButton").click(function(){
+            
+            var name  = $("#name").val();
+            var email = $("#email").val();
+            var contact = $("#contact").val();
+            $.ajax({
+                type: "POST",
+                url: "../api/builder/create.php",
+                data: JSON.stringify({
+                    "builder_name" : name,
+                    "email" : email,
+                    "contact" : contact
+                }),
+                dataType:"json",
+                
+                success: function(result){
+                    console.log(result);
+                }
+            }) 
+        });
         
         function readFile() {
     if(this.files[0].size > 1000000){
