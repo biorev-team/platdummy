@@ -2,25 +2,24 @@
 include("../api/include/dbConnect.php");
 $dbConn = new DB_Connect();
 $conn = $dbConn->connect();
-session_start();
- $builderId = $_SESSION['S_BUILDER_ID'];
-$editBuilderQuery = "SELECT builders_info.email, builders_info.builder_name, builders_info.contact, areas_info.area_name, areas_info.lots, areas_info.primary_image FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active' AND builders_info.builder_id = '$builderId'";
-    
-    $editBuilderResult = mysqli_query($conn, $editBuilderQuery);
-
-    while( $editBuilderRow = mysqli_fetch_array($editBuilderResult) ){
-    
-    $builderName    = $editBuilderRow['builder_name'];
-    $builderEmail   = $editBuilderRow['email'];
-    $builderArea    = $editBuilderRow['area_name'];
-    $builderPrImage = $editBuilderRow['primary_image'];
-    $builderLots    = $editBuilderRow['lots'];
-    $builderContact = $editBuilderRow['contact'];
-        
-        if($builderPrImage == ""){
-            $builderPrImage = "https://www.freeiconspng.com/uploads/no-image-icon-11.PNG";
-        }
-}
+// $builderId = $_SESSION['S_BUILDER_ID'];
+//$editBuilderQuery = "SELECT builders_info.email, builders_info.builder_name, builders_info.contact, areas_info.area_name, areas_info.lots, areas_info.primary_image FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active' AND builders_info.builder_id = '$builderId'";
+//    
+//    $editBuilderResult = mysqli_query($conn, $editBuilderQuery);
+//
+//    while( $editBuilderRow = mysqli_fetch_array($editBuilderResult) ){
+//    
+//    $builderName    = $editBuilderRow['builder_name'];
+//    $builderEmail   = $editBuilderRow['email'];
+//    $builderArea    = $editBuilderRow['area_name'];
+//    $builderPrImage = $editBuilderRow['primary_image'];
+//    $builderLots    = $editBuilderRow['lots'];
+//    $builderContact = $editBuilderRow['contact'];
+//        
+//        if($builderPrImage == ""){
+//            $builderPrImage = "https://www.freeiconspng.com/uploads/no-image-icon-11.PNG";
+//        }
+//}
 //if( isset( $_POST['save'] ) ){
 //    
 //    if( !$_POST['name'] ){
@@ -202,37 +201,18 @@ $editBuilderQuery = "SELECT builders_info.email, builders_info.builder_name, bui
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Enter email" value="<?php echo $builderEmail; ?>" name="email">
+                    <input type="email" class="form-control" id="email" placeholder="Enter email" value="<?php echo $builderEmail; ?>" name="email">
                   </div>
                   <div class="form-group">
                     <label for="contact">Contact</label>
                     <input type="text" class="form-control" id="contact" placeholder="Enter contact number" value="<?php echo $builderContact; ?>" name="contact">
                   </div>
-                  <div class="form-group">
-                    <label for="area">Area</label>
-                    <input type="text" class="form-control" id="area" placeholder="Enter area" value="<?php echo $builderArea; ?>" name="area">
-                  </div>
-                    <div class="form-group">
-                    <label for="lots">Total Lots in Area</label>
-                    <input type="text" class="form-control" id="lots" placeholder="Enter number of lots" value="<?php echo $builderLots; ?>" name="lots">
-                  </div>
-                    
-                  <div class="form-group">
-                      <label>Primary Image</label><br>
-                    
-                    <div class="margin-bottom margin-top">
-                        <input type="file" class="form-control" name="fileToUpload" id="avatar">
-                        <small class="text-danger"> <?php echo $logoError; ?></small>
-                    </div> <br>
-                      <label id="labelForAvatar" for="avatar">
-                     <img src="<?php echo $builderPrImage; ?>" style="width:200px;" id="imgupload">
-                    </label>
-                  </div>
+                  
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary" name="save">Save Changes</button>
+                  <button type="button" class="btn btn-primary" name="save" id="saveButton">Save Changes</button>
                 </div>
               </form>
         <!-- /.row -->
@@ -274,6 +254,42 @@ $editBuilderQuery = "SELECT builders_info.email, builders_info.builder_name, bui
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
     <script type="text/javascript">
         
+        var builderId = localStorage.getItem("builderid");
+        $.ajax({
+                type: "GET",
+                url: "../api/builder/single.php",
+                data: "id=" + builderId,
+                success: function(result){
+                    $("#name").val(result["body"][0]["builder_name"]);
+                    $("#email").val(result["body"][0]["email"]); 
+                    $("#contact").val(result["body"][0]["contact"]);
+                }
+            })
+        
+        $("#saveButton").click(function(){
+                var name    = $("#name").val();
+                var email   = $("#email").val();
+                var contact = $("#contact").val();
+            $.ajax({
+                type: "POST",
+                url : "../api/builder/update.php",
+                data: JSON.stringify({
+                    "builder_id": builderId,  
+                    "name": name,
+                    "email":email,
+                    "contact":contact
+            }),
+                dataType:"json",
+                
+                
+                success:function(result){
+                    console.log(result);
+                }
+                
+            }) 
+        });
+        
+//        DISPLAY UPLOAD IMAGE
         function readFile() {
     if(this.files[0].size > 1000000){
         alert("File must be less than 1MB");

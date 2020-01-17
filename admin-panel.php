@@ -12,48 +12,48 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
         header("location:login.php");    
     }
     
-    else{
+//    else{
 
-$builderInfoQuery = "SELECT builders_info.email,builders_info.builder_id, builders_info.builder_name, builders_info.contact, areas_info.area_name FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active'";
-
-$builderInfoResult = mysqli_query($conn, $builderInfoQuery);
-$counter = 1;
-
-while( $builderRow = mysqli_fetch_array( $builderInfoResult ) ){
-   
-    $builderId       = $builderRow['builder_id'];
-    $builderName    = $builderRow['builder_name'];
-    $builderContact = $builderRow['contact'];
-    $builderArea    = $builderRow['area_name'];
-    $builderEmail   = $builderRow['email'];
-    
-         
-    $display.= "<tr>
-                    <td>$builderId</td>
-                    <td>$builderName</td>
-                    <td>$builderEmail</td>
-                    <td>$builderContact</td>
-                    <td>$builderArea</td>
-                    <td><form method='post'><button type='submit' class='btn btn-block btn-outline-primary' value='$counter' name='edit'>Edit</button></form></td>
-                </tr>";
-    $counter++;
-    
+//$builderInfoQuery = "SELECT builders_info.email,builders_info.builder_id, builders_info.builder_name, builders_info.contact, areas_info.area_name FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active'";
+//
+//$builderInfoResult = mysqli_query($conn, $builderInfoQuery);
+//$counter = 1;
+//
+//while( $builderRow = mysqli_fetch_array( $builderInfoResult ) ){
+//   
+//    $builderId       = $builderRow['builder_id'];
+//    $builderName    = $builderRow['builder_name'];
+//    $builderContact = $builderRow['contact'];
+//    $builderArea    = $builderRow['area_name'];
+//    $builderEmail   = $builderRow['email'];
+//    
+//         
+//    $display.= "<tr>
+//                    <td>$builderId</td>
+//                    <td>$builderName</td>
+//                    <td>$builderEmail</td>
+//                    <td>$builderContact</td>
+//                    <td>$builderArea</td>
+//                    <td><form method='post'><button type='submit' class='btn btn-block btn-outline-primary' value='$counter' name='edit'>Edit</button></form></td>
+//                </tr>";
+//    $counter++;
+//    
+//}
+//    }
 }
-    }
-}
 
-if( isset( $_POST['edit'] ) ){
-    $btnValue = $_POST['edit'];
-    
-    $editBuilderQuery = "SELECT builder_id FROM builders_info WHERE builder_id = '$btnValue' AND status = 'active'";
-    $editBuilderResult = mysqli_query($conn, $editBuilderQuery);
-    $editBuilderRow = mysqli_fetch_array($editBuilderResult);
-    
-    $builderId    = $editBuilderRow['builder_id'];
-    
-    $_SESSION['S_BUILDER_ID'] = $builderId;
-    header("location:includes/edit-builder.php");
-}
+//if( isset( $_POST['edit'] ) ){
+//    $btnValue = $_POST['edit'];
+//    
+//    $editBuilderQuery = "SELECT builder_id FROM builders_info WHERE builder_id = '$btnValue' AND status = 'active'";
+//    $editBuilderResult = mysqli_query($conn, $editBuilderQuery);
+//    $editBuilderRow = mysqli_fetch_array($editBuilderResult);
+//    
+//    $builderId    = $editBuilderRow['builder_id'];
+//    
+//    $_SESSION['S_BUILDER_ID'] = $builderId;
+//    header("location:includes/edit-builder.php");
+//}
 ?>
 <!DOCTYPE html>
 <html>
@@ -238,6 +238,40 @@ if( isset( $_POST['edit'] ) ){
     <script type="text/javascript">
         $("#add").click(function(){
             window.location.href="includes/new-builder.php"; 
+        });
+        
+$(document).ready(function(){
+           
+            $.ajax({
+                type: "POST",
+                url: "api/builder/read.php",
+                
+                success: function(result){
+                    var id =0;
+                    $.each(result["data"], function(){
+                        
+                        var builderId       = result["data"][id]["builder_id"];
+                        var builderName     = result["data"][id]["builder_name"];
+                        var builderContact  = result["data"][id]["contact"];
+                        var builderStatus   = result["data"][id]["status"];
+                        var builderArea     = result["data"][id]["area"];
+                        
+                        $("tbody").append("<tr><td>" + builderId + "</td><td>" +builderName + "</td><td></td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td><button type='button' class='btn btn-block btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button></td></tr>");
+                        id++;
+                        
+                  
+                       });
+                    
+                         $(".edit").click(function(){
+                            var builderId = $(this).val();    
+                        localStorage.setItem("builderid", builderId);
+                             window.location.href ="includes/edit-builder.php";
+                    });
+                    
+                }
+            })
+            
+
         });
     </script>
 
