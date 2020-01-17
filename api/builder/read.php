@@ -38,7 +38,8 @@ if($count > 0){
               "builder_name" => $builder_name,
               "contact" =>$contact,
               "status" =>$status,
-              "area" => $area_name
+              "area" => $area_name,
+              "email" => $email
         );
 
         array_push($builder["data"], $p);

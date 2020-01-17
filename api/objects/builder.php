@@ -25,7 +25,7 @@ public $email;
  //function which will read the builders available into the database      
 public function read(){
     // select all query
-    $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, areas_info.area_name,builders_info.status FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id";
+    $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, builders_info.email,areas_info.area_name,builders_info.status FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id";
     // prepare query statement
     $resultSet = mysqli_query($this->connection, $query);
     return $resultSet;
