@@ -3,52 +3,34 @@ include("../api/include/dbConnect.php");
 $dbCon = new DB_Connect();
 $conn = $dbCon->connect();
 session_start();
+$areaId = $_SESSION['S_AREA_ID'];
 
-$adminQuery = "SELECT email FROM admins ";
-$adminResult = mysqli_query($conn, $adminQuery);
-
-while( $adminRow = mysqli_fetch_array($adminResult) ){
-    $adminEmail = $adminRow['email']; 
-    
-    if($_SESSION['S_EMAIL'] != $adminEmail){
-        header("location:../login.php");    
-    }
-    else{
-$areaQuery = "SELECT builders_info.builder_name, areas_info.area_name, areas_info.lots, areas_info.area_id FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active'";
-
-$areaResult = mysqli_query($conn, $areaQuery);
-$counter = 1;
-
-while( $areaRow = mysqli_fetch_array( $areaResult ) ){
-    $areaId       = $areaRow['area_id'];
-    $builderName    = $areaRow['builder_name'];
-    $areaLots = $areaRow['lots'];
-    $areaName    = $areaRow['area_name'];
+$areaQuery = "SELECT area_name from areas_info WHERE area_id = $areaId";
+$areaResult = mysqli_query($conn, $areaQuery );
+$areaRow = mysqli_fetch_array($areaResult);
+$areaName = $areaRow['area_name'];
+$counter=1;
+$lotsQuery = "SELECT alias, lot_status, lot_price FROM lots WHERE area_id ='$areaId'";
+$lotsResult = mysqli_query($conn, $lotsQuery);
+while( $lotsRow = mysqli_fetch_array($lotsResult) ){
+    $lotNumber = $lotsRow['alias'];
+    $lotStatus = $lotsRow['lot_status'];
+    $lotPrice  = $lotsRow['lot_price'];
     
     $display.= "<tr>
-                    <td>$areaId</td>
-                    <td>$areaName</td>
-                    <td>$builderName</td>
-                    <td>$areaLots</td>
-                    <td style='width:200px;'><div class='btn-group'><form method='post'><button type='submit' class='btn btn-outline-primary' value='$counter' name='view'>View</button></form>
-                    <button type='button' class='btn btn-outline-danger' value='$counter' name='Delete'>Delete</button></div>
+                    <td><input type = 'text' value='$lotNumber' class='inputs' disabled name='number' value='$counter'></td>
+                    <td><input type = 'text' value='$lotStatus' class='inputs' disabled name='status' value='$counter'></td>
+                    <td><input type = 'text' value='$lotPrice' class='inputs' disabled name='price' value='$counter'></td>
+                    <td><button type='submit' class='btn btn-outline-primary edit' value='$counter' name='edit'>Edit</button>
+                    <button style='visibility:hidden;' type='submit' class='btn btn-outline-success save' value='$counter' name='save'>Save</button>
+                    <button style='visibility:hidden;' type='submit' class='btn btn-outline-danger cancel' value='$counter' name='cancel'>Cancel</button>
                     </td>
+                    
                 </tr>";
     $counter++;
-    }
-}
 }
 
-if( isset($_POST['view'] ) ){
 
-$btnValue = $_POST['view'];
-$areaIdQuery = "SELECT area_id FROM areas_info WHERE area_id = '$btnValue'";
-$areaIdResult = mysqli_query($conn, $areaIdQuery);
-$areaIdRow = mysqli_fetch_array($areaIdResult);
-
-    $_SESSION['S_AREA_ID'] = $areaIdRow['area_id'];
-    header("location:view-area.php");
-}
 
 ?>
 <!DOCTYPE html>
@@ -67,6 +49,19 @@ $areaIdRow = mysqli_fetch_array($areaIdResult);
   <link rel="stylesheet" href="../AdminLTE-3.0.1/dist/css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+        <style>
+            
+            .inputs{
+                border: none;
+                outline: none;
+                background: transparent;
+            }
+            
+            tr:hover .inputs {
+                background: transparent;
+            }
+            
+        </style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -142,12 +137,13 @@ $areaIdRow = mysqli_fetch_array($areaIdResult);
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Areas</h1>
+            <h1 style="text-transform:capitalize;" class="m-0 text-dark"><?php echo $areaName;?></h1>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Areas</li>
+                <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item"><a href="#">Areas</a></li>
+              <li style="text-transform:capitalize;" class="breadcrumb-item active"><?php echo $areaName;?> </li>
             </ol>
           </div><!-- /.col -->
         </div><!-- /.row -->
@@ -171,15 +167,14 @@ $areaIdRow = mysqli_fetch_array($areaIdResult);
                 <table class="table table-hover">
                   <thead>
                     <tr>
-                      <th>S.No</th>
-                      <th>Area </th>
-                      <th>Builder Assigned</th>
-                      <th>Total Lots</th>
+                      <th>Lot Number</th>
+                      <th>Status</th>
+                      <th>Price</th>    
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <?php echo $display;?>
+                    <?php echo $display; ?>
                   </tbody>
                 </table>
               </div>
@@ -225,5 +220,35 @@ $areaIdRow = mysqli_fetch_array($areaIdResult);
 <script src="../AdminLTE-3.0.1/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
+    <script type="text/javascript">
+        $(".edit").click(function(){
+            $(this).css("visibility", "hidden");
+            $(this).parent().siblings().find("input[type=text]").prop('disabled', false);
+            $(this).parent().siblings().find("input[type=text]").removeClass("inputs");
+            $(this).siblings().css("visibility","visible");
+            $(this).parent().parent().css("background-color", "rgba(0,0,0,.075)");
+        });
+        $(".cancel").click(function(){
+            $(this).css("visibility", "hidden");
+            $(this).siblings(".edit").css("visibility","visible");
+            $(this).siblings(".save").css("visibility", "hidden");
+            $(this).parent().siblings().find("input[type=text]").prop('disabled', true);
+            $(this).parent().siblings().find("input[type=text]").addClass("inputs");
+            $(this).parent().parent().css("background-color", "inherit");
+        });
+        
+        $(".save").click(function(){
+            $.ajax({
+                type:"POST",
+                url: "../api/include/functions.php",
+                data: "check=edit",
+                
+                success: function(result){
+                
+                }
+                
+            })
+        });
+    </script>
     </body>
 </html>
