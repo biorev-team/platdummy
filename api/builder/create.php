@@ -19,22 +19,24 @@ $conn = $dbConn->connect();
 //}
 
   $builder = new Builder($conn);
-  $builder_name = $_GET['builder_name'];
-  $status = $_GET['status'];
+//  $builder_name = $_GET['builder_name'];
+//  $status = $_GET['status'];
 //// get posted data
-//$data = json_decode(file_get_contents("php://input"));
+$data = json_decode(file_get_contents("php://input"));
 
 // make sure data is not empty
 if(
-    !empty($builder_name) &&
-    !empty($status) 
+    !empty($data->builder_name) &&
+    !empty($data->email)&&
+    !empty($data->contact)
     
    
 ){
  
     // set product property values
-    $builder->builder_name = $builder_name;
-    $builder->status = $status;
+    $builder->builder_name = $data->builder_name;
+    $builder->email = $data->email;
+    $builder->contact = $data->contact;
 //    $builder->updated_at =$data->updated_at;
 //    $builder->created_at =$data->created_at;
 //    $builder->contact =$data->contact;
@@ -42,11 +44,12 @@ if(
     // create the product
     if($builder->create_builder()){
  
-        // set response code - 201 created
-        http_response_code(201);
- 
-        // tell the user
-        echo json_encode(array("message" => "New Builder added to the database."));
+        $arr["method"]=$_SERVER["REQUEST_METHOD"];
+        $arr["success"] = true;
+        $arr["response"] =http_response_code();
+        $arr["body"] = array();  
+      array_push($arr["body"], "Added successfully");
+      echo(json_encode($arr,JSON_PRETTY_PRINT));
     }
  
     // if unable to create the builder, tell the user
@@ -65,6 +68,8 @@ if(
 else{
  
     // set response code - 400 bad request
+   // $date = new DateTime(null, new DateTimeZone('Asia/Calcutta'));
+    //$date->format('Y-m-d H:i:s');
  $error = array();
  $error["response"] =  http_response_code(400);    
  $error["status"] = false;

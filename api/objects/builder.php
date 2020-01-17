@@ -49,21 +49,23 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
          
          // query to insert record
     $query = "INSERT INTO
-                builders_info(builder_name,status,updated_at,created_at,contact) VALUES(?,?,?,?,?) 
+                builders_info(builder_name,email,status,updated_at,created_at,contact) VALUES(?,?,?,?,?,?) 
             ";
  
     // prepare query
     $stmt = $this->connection->prepare($query);
- 
+    $date = new DateTime(null, new DateTimeZone('Asia/Calcutta'));
+    date_default_timezone_set('Asia/Calcutta');
     // sanitize
     $this->builder_name=htmlspecialchars(strip_tags($this->builder_name));
-    $this->status=htmlspecialchars(strip_tags($this->status));
-    $this->updated_at=htmlspecialchars(strip_tags($this->updated_at)); 
-    $this->created_at=htmlspecialchars(strip_tags($this->created_at));  
+    $this->email = htmlspecialchars(strip_tags($this->email));     
+    $this->status="active";
+    $this->updated_at= date("Y-m-d H:i:s");
+    $this->created_at=date("Y-m-d H:i:s");
     $this->contact=htmlspecialchars(strip_tags($this->contact));     
  
     // bind values
-    $stmt->bind_param("sssss", $this->builder_name,$this->status,$this->updated_at,$this->created_at,$this->contact);
+    $stmt->bind_param("ssssss", $this->builder_name,$this->status,$this->updated_at,$this->created_at,$this->contact);
     
  
     // execute query

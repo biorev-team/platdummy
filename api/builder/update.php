@@ -43,8 +43,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
             }
         }
     else{
-        
-        
+    
         $arr["method"]=$_SERVER["REQUEST_METHOD"];
         $arr["expected-method"] = "POST";
         $arr["success"] = false;
@@ -52,6 +51,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){
         $arr["body"] = array(); 
         array_push($arr["body"],array("message"=>" Data is not complete"));
         echo(json_encode($arr,JSON_PRETTY_PRINT)); 
+        die();
     }
     
 }
@@ -64,7 +64,7 @@ else {
         $arr["body"] = array(); 
         array_push($arr["body"],array("message"=>"Bad request type"));
         echo(json_encode($arr,JSON_PRETTY_PRINT));
-
+        die();
 
 }
 
