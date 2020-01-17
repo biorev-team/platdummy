@@ -27,7 +27,6 @@ $builder_arr = array(
     'contact' => $builder->contact,
     'area'=> $builder->area_name,
     'email'=>$builder->email,
-    'p_image'=>$builder->primary_image
 );
  array_push($single_builder_info["body"], $builder_arr);
 

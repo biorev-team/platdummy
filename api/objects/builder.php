@@ -18,7 +18,7 @@ public $updated_at;
 public $created_at;
 // email
 public $email;     
-public $primary_image;     
+    
      function __construct($conn){
         $this->connection = $conn;
     }      
@@ -33,15 +33,14 @@ public function read(){
 // read single builder information
      public function read_single(){
          
-$query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, builders_info.email,areas_info.area_name,builders_info.status,areas_info.primary_image FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.builder_id='$this->builder_id'";
+$query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, builders_info.email,areas_info.area_name,builders_info.status FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.builder_id='$this->builder_id'";
     $rs = mysqli_query($this->connection,$query);
      $row = mysqli_fetch_array($rs);
      $this->builder_name = $row['builder_name'];
      $this->status = $row['status'];
      $this->contact = $row['contact']; 
      $this->area_name = $row['area_name']; 
-     $this->email = $row['email'];
-     $this->primary_image=$row['primary_image'];     
+     $this->email = $row['email']; 
        
          return true;
      }
