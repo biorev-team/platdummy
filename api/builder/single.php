@@ -24,7 +24,10 @@ if(!empty($builder->builder_name)){
 $builder_arr = array(
     'builder_name' => $builder->builder_name,
     'status' => $builder->status,
-    'contact' => $builder->contact
+    'contact' => $builder->contact,
+    'area'=> $builder->area_name,
+    'email'=>$builder->email,
+    'p_image'=>$builder->primary_image
 );
  array_push($single_builder_info["body"], $builder_arr);
 
