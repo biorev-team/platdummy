@@ -21,71 +21,71 @@ $editBuilderQuery = "SELECT builders_info.email, builders_info.builder_name, bui
             $builderPrImage = "https://www.freeiconspng.com/uploads/no-image-icon-11.PNG";
         }
 }
-if( isset( $_POST['save'] ) ){
-    
-    if( !$_POST['name'] ){
-        $nameError = "Please enter your name";   
-        }
-    else{
-        $formName = $_POST['name'];
-    }
-    
-    if( !$_POST['email'] ){
-        $emailError = "Please enter your email";   
-    }
-    else{
-        $formEmail = $_POST['email'];
-    }
-    
-    if( !$_POST['contact'] ){
-        $contactError = "Please enter your contact";   
-}
-    else{
-        $formContact = $_POST['contact'];
-    }
-    if( !$_POST['area'] ){
-        $areaError = "Please enter your area";   
-}
-    else{
-        $formArea = $_POST['area'];
-    }
-    if( !$_POST['lots'] ){
-        $lotsError = "Please enter number of lots";   
-}
-    else{
-        $formLots = $_POST['lots'];
-    }
-    if( !$_POST['fileToUpload'] ){
-        $imageError = "Please select the image";   
-    }
-    else{
-        $formImage = $_POST['fileToUpload'];
-    }
-    
-//    echo $builderId;
-    if( $formName && $formEmail && $formContact && $formLots && $formImage && $formArea ){
-   $updateQuery = "UPDATE builders_info INNER JOIN areas_info ON ( builders_info.builder_id = areas_info.builder_id ) 
-   SET 
-        builders_info.builder_name = '$formName' ,
-        builders_info.contact      = '$formContact',
-        builders_info.email        = '$formEmail',
-        areas_info.area_name       = '$formArea',
-        areas_info.lots            = '$formLots',
-        areas_info.primary_image   = '../images/$formImage'
-        WHERE builders_info.builder_id = '$builderId' AND areas_info.builder_id = '$builderId'
-        ";
-    if(mysqli_query( $conn, $updateQuery )){
-        echo "<div class='alert alert-success'>Successfully Changed</div>";
-    }
-    else{
-        echo "<div class='alert alert-danger'>Please check your internet connection or try again later.</div>";
-    }
-    }
-    
-    else{
-        echo "<div class='alert alert-danger'>No Updates Done</div>";
-    }
-}
+//if( isset( $_POST['save'] ) ){
+//    
+//    if( !$_POST['name'] ){
+//        $nameError = "Please enter your name";   
+//        }
+//    else{
+//        $formName = $_POST['name'];
+//    }
+//    
+//    if( !$_POST['email'] ){
+//        $emailError = "Please enter your email";   
+//    }
+//    else{
+//        $formEmail = $_POST['email'];
+//    }
+//    
+//    if( !$_POST['contact'] ){
+//        $contactError = "Please enter your contact";   
+//}
+//    else{
+//        $formContact = $_POST['contact'];
+//    }
+//    if( !$_POST['area'] ){
+//        $areaError = "Please enter your area";   
+//}
+//    else{
+//        $formArea = $_POST['area'];
+//    }
+//    if( !$_POST['lots'] ){
+//        $lotsError = "Please enter number of lots";   
+//}
+//    else{
+//        $formLots = $_POST['lots'];
+//    }
+//    if( !$_POST['fileToUpload'] ){
+//        $imageError = "Please select the image";   
+//    }
+//    else{
+//        $formImage = $_POST['fileToUpload'];
+//    }
+//    
+////    echo $builderId;
+//    if( $formName && $formEmail && $formContact && $formLots && $formImage && $formArea ){
+//       $updateQuery = "UPDATE builders_info INNER JOIN areas_info ON ( builders_info.builder_id = areas_info.builder_id ) 
+//       SET 
+//            builders_info.builder_name = '$formName' ,
+//            builders_info.contact      = '$formContact',
+//            builders_info.email        = '$formEmail',
+//            areas_info.area_name       = '$formArea',
+//            areas_info.lots            = '$formLots',
+//            areas_info.primary_image   = '../images/$formImage'
+//            WHERE builders_info.builder_id = '$builderId' AND areas_info.builder_id = '$builderId'
+//            ";
+//    if(mysqli_query( $conn, $updateQuery )){
+//        echo "<div class='alert alert-success'>Successfully Changed</div>";
+//    }
+//    else{
+//        echo "<div class='alert alert-danger'>Please check your internet connection or try again later.</div>";
+//    }
+//    }
+//    
+//    else{
+//        echo "<div class='alert alert-danger'>No Updates Done</div>";
+//    }
+//}
 ?>
 <!DOCTYPE html>
 <html>
@@ -194,7 +194,7 @@ if( isset( $_POST['save'] ) ){
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-            <form role="form" method="post" action="<?php echo htmlspecialchars( $_SERVER['PHP_SELF'] ); ?>">
+            <form role="form" method="post" action="http://localhost/platdummy/api/builder/update.php">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="name">Name</label>

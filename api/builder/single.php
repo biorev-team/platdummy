@@ -16,7 +16,7 @@ $builder->builder_id = isset($_GET['id'])? $_GET['id'] : die("Not getting any pa
 $builder->read_single();
 $single_builder_info = array();
 $single_builder_info["method"]=$_SERVER["REQUEST_METHOD"];
-$error_arr["success"] = false;
+$single_builder_info["success"] = true;
 $single_builder_info["response"] =http_response_code();
 $single_builder_info["count"] = 1;
 $single_builder_info["body"] = array();
@@ -24,7 +24,7 @@ if(!empty($builder->builder_name)){
 $builder_arr = array(
     'builder_name' => $builder->builder_name,
     'status' => $builder->status,
-    'contact' => $builder->contact,
+    'contact' => $builder->contact
 );
  array_push($single_builder_info["body"], $builder_arr);
 

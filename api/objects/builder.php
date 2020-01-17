@@ -15,7 +15,10 @@ public $area_name;
 // updated at
 public $updated_at;
 // created at
-public $created_at;     
+public $created_at;
+// email
+public $email;     
+     
      function __construct($conn){
         $this->connection = $conn;
     }      
@@ -32,26 +35,11 @@ public function read(){
          
      $query = "SELECT * FROM builders_info WHERE builder_id = '$this->builder_id' ";      
      $rs = mysqli_query($this->connection,$query);
-     $row = mysqli_fetch_array($rs);
+     $row = mysqli_fetch_row($rs);
      $this->builder_name = $row['builder_name'];
      $this->status = $row['status'];
      $this->contact = $row['contact']; 
      $this->area_name = $row['area_name'];     
-         
-              
-         // prepare statement
-//        $stmt = $this->connection->prepare($query);
-//        $stmt->bind_param("i",$this->builder_id);
-//        $stmt->execute();
-//        $result = $stmt->get_result()->fetch_assoc();
-//         return $result;
-
-//          while($row = mysql_fetch_assoc($stmt)){
-//         $this->builder_name = $row['builder_name'];
-//         $this->status = $row['status'];
-//         $this->contact = $row['contact'];
-//          }
-         
      }
      // CREAT NEW BUILDER
      public function create_builder(){
@@ -82,10 +70,35 @@ public function read(){
  
     return false;
          
-         
-         
-         
-         
+     }
+     // DELETE A BUILDER FROM THE DATABASE USING THE BUILDER ID
+     public function delete_builder(){
+         $query = "DELETE FROM builders_info WHERE builder_id=?";
+         $stmt = $this->connection->prepare($query);
+         $this->builder_id=htmlspecialchars(strip_tags($this->builder_id));
+         $stmt->bind_param("i",$this->builder_id);
+         // execute query
+    if($stmt->execute()){
+        return true;
+    }
+ 
+    return false;
+
+     }
+     // update function here
+     public function update_builder(){
+         $updateQuery = "UPDATE builders_info
+         SET
+         builder_name ='$this->builder_name',
+         email ='$this->email',
+         contact='$this->contact' 
+         WHERE builder_id ='$this->builder_id'";
+         if(mysqli_query($this->connection,$updateQuery)){
+             return true;
+         }
+         else {
+             return false;
+         }
      }
      
  }
