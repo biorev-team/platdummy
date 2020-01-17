@@ -241,14 +241,18 @@ while( $lotsRow = mysqli_fetch_array($lotsResult) ){
             var lotNumber = $(this).parent().siblings().find("input[name=number]").val();
             var lotStatus = $(this).parent().siblings().find("input[name=status]").val();
             var lotPrice = $(this).parent().siblings().find("input[name=price]").val();
-            console.log(id);
             $.ajax({
                 type:"POST",
-                url: "../api/include/functions.php",
-                data: "lotNumber=",
-                
+                url: "../api/lot/update.php",
+                data: JSON.stringify({
+                    "id":lotNumber,
+                    "alias":lotNumber,
+                    "lot_price":lotPrice,
+                    "lot_status":lotStatus
+                }),
+                dataType:"json",
                 success: function(result){
-                
+                alert("successful");
                 }
                 
             })
