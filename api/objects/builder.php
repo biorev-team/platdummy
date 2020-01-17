@@ -35,11 +35,12 @@ public function read(){
          
      $query = "SELECT * FROM builders_info WHERE builder_id = '$this->builder_id' ";      
      $rs = mysqli_query($this->connection,$query);
-     $row = mysqli_fetch_row($rs);
+     $row = mysqli_fetch_array($rs);
      $this->builder_name = $row['builder_name'];
      $this->status = $row['status'];
      $this->contact = $row['contact']; 
-     $this->area_name = $row['area_name'];     
+     $this->area_name = $row['area_name']; 
+         return true;
      }
      // CREAT NEW BUILDER
      public function create_builder(){

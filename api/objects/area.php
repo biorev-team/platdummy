@@ -16,7 +16,12 @@ class Area{
         $this->connection = $conn;
     }
 
-    
+    // Select Area table information
+    public function read(){
+        $query = "SELECT * from areas_info";
+        $resultSet = mysqli_query($this->connection,$query);
+        return $resultSet;
+    }
     
     
     
