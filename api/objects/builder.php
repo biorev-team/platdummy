@@ -54,18 +54,17 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
  
     // prepare query
     $stmt = $this->connection->prepare($query);
-    $date = new DateTime(null, new DateTimeZone('Asia/Calcutta'));
     date_default_timezone_set('Asia/Calcutta');
     // sanitize
     $this->builder_name=htmlspecialchars(strip_tags($this->builder_name));
     $this->email = htmlspecialchars(strip_tags($this->email));     
-    $this->status="active";
+    $this->status= "active";
     $this->updated_at= date("Y-m-d H:i:s");
     $this->created_at=date("Y-m-d H:i:s");
     $this->contact=htmlspecialchars(strip_tags($this->contact));     
  
     // bind values
-    $stmt->bind_param("ssssss", $this->builder_name,$this->status,$this->updated_at,$this->created_at,$this->contact);
+    $stmt->bind_param("ssssss", $this->builder_name,$this->email,$this->status,$this->updated_at,$this->created_at,$this->contact);
     
  
     // execute query

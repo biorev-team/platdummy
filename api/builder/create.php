@@ -29,11 +29,9 @@ if(
     !empty($data->builder_name) &&
     !empty($data->email)&&
     !empty($data->contact)
-    
-   
 ){
  
-    // set product property values
+    // set builder property values
     $builder->builder_name = $data->builder_name;
     $builder->email = $data->email;
     $builder->contact = $data->contact;
