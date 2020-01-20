@@ -14,7 +14,7 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
         header("location:../login.php");    
     }
     else{
-$areaQuery = "SELECT builders_info.builder_name, areas_info.area_name, areas_info.lots, areas_info.area_id FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active'";
+$areaQuery = "SELECT builders_info.builder_name, areas_info.area_name, areas_info.area_id FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active'";
 
 $areaResult = mysqli_query($conn, $areaQuery);
 $counter = 1;
@@ -226,5 +226,12 @@ $areaIdRow = mysqli_fetch_array($areaIdResult);
 <script src="../AdminLTE-3.0.1/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
+    <script> 
+    
+        $("#addArea").click(function(){
+            window.location.href="add-area.php";  
+                });
+        
+    </script>
     </body>
 </html>

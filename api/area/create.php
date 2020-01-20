@@ -39,7 +39,7 @@ if(!empty($data->area_name)&&
     }
     else {
          $message["success"]=false;
-        array_push($message["body"],"Something went wrong. May be the given area alredy exist into the database.");
+        array_push($message["body"],"Area alredy exist into the database.");
         echo json_encode($message,JSON_PRETTY_PRINT);
     }
     

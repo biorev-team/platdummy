@@ -17,7 +17,8 @@
         <!-- Select2 -->
   <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">  
-    <style>
+        <!--        SweetAlert-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.6.0/dist/sweetalert2.all.min.js"></script>    <style>
         .select2-container--default .select2-selection--single{
             height: 36px;
         }    
@@ -175,7 +176,7 @@
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="button" class="btn btn-primary" id="import" value="false">Import File</button>
+                  <button type="button" class="btn btn-primary" id="import">Import File</button>
                 </div>
               </form>
           
@@ -217,27 +218,24 @@
     <script src="../AdminLTE-3.0.1/plugins/select2/js/select2.full.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
-    
-
+<!--SweetAlert-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.6.0/dist/sweetalert2.all.min.js"></script>
     <script type="text/javascript">
         
-        var imageAddress = "G:\Ampps\www\platdummy\images\primary_images\\";
-                //Initialize Select2 Elements
-    $('.select2').select2()
+//Initialize Select2 Elements
+    $('.select2').select2();
 
     //Initialize Select2 Elements
     $('.select2bs4').select2({
       theme: 'bootstrap4'
-    })
-        var selectedOption;
-        var areaName    = $("#name").val();
-        var areaAddress = $("#address").val();
-        $("#avatar").change(function(){
-        var pImageName = $('#avatar').val().split('\\').pop() + $.now();
-//             
-       });
+    });
         
-//        console.log(areaPimage);
+//        Defining Variables
+        var imageAddress = "G:/Ampps/www/platdummy/images/primary_images/";
+        var selectedOption;
+        var pImageName;
+        var builderId;
+        
 //AJAX FOR READING BUILDER
         $.ajax({
             type: "POST",
@@ -256,16 +254,25 @@
         
         
         $( "#selectBuilder" ).change(function() {
-                        var builderId;
+            
             $( "#selectBuilder option:selected" ).each(function() {
-                        selectedOption = $( this ).html();
+                        selectedOption = $(this).html();
                         builderId = $(this).val();
+//                console.log(selectedOption);
+                
                     });
-            var pImageName;
+            }).trigger( "change" );
+         
+        
                 $("#avatar").change(function(){
-                pImageName = $('#avatar').val().split('\\').pop() + $.now();
-                    
-                    $("#addButton").click(function(){
+                pImageName = $('#avatar').val().split('\\').pop() + $.now();   
+                });
+        
+//             Insert Area AJAX
+         $("#addButton").click(function(){
+             var areaName   = $("#name").val();
+             var areaAddress = $("#address").val();
+             
                         $.ajax({
                             type: "POST",
                             url : "../api/area/create.php",
@@ -273,37 +280,71 @@
                                 "builder_id": builderId,
                                 "area_name" : areaName,
                                 "area_address" : areaAddress,
-                                "primary_image" : pImageName
+                                "primary_image" : imageAddress + pImageName 
                             }),
                             dataType :"json",
                             
                             success: function(result){
-                                console.log(result);
+                                
+//                                console.log(result);
+                               
+                                Swal.fire({
+                                title: '',
+                                text: result["body"][0],
+                                icon: 'success',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Back to list'
+                                }).then((next) => {
+                                if (next.value) {
+                                    window.location.href="area.php";
+                                }
+                                })
+                               if(result["success"] == " true"){
+                                   $("#addButton").val("true");  
+                               } 
                             }
                         })  
                     });
-                    
-                    
-                });
-            
-
-//            console.log(selectedOption);
-//            console.log(builderId);
-            }).trigger( "change" );
+        
+//        Import AJAX
         
                 $("#import").click(function(){
+                    if($("#addButton").val() == true){
+                    var file_data = $('#file').prop('files')[0];   
+            var form_data = new FormData();                  
+            form_data.append('file', file_data);
             $.ajax({
-                type: "POST",
-                url: "../api/include/functions.php",
-                data : "check=import",
+                type :"POST",
+                url: "../api/include/export.php",
+                data : form_data,
+                contentType: false,
+                cache: false,
+                processData:false,
                 
                 success: function(result){
-                    console.log(result);
+                    if(result == "Error1"){
+                        alert("Invalid File");
+                    }
+                    else if(result == "Error2"){
+                        alert("Please select file");
+                    }
+                    else{
+                        alert(result);
+                    }
                 }
             })
-        });
-            
+       
+        }
+                     else{
+            alert("Please add area first");
+        }
+                     });
         
+       
+            
+//        Display Image
         function readFile() {
     if(this.files[0].size > 1000000){
         alert("File must be less than 1MB");
@@ -326,6 +367,8 @@
         if(el){
         el.addEventListener("change", readFile, false);
         }
+        
+   
     </script>
     </body>
 </html>

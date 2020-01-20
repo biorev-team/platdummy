@@ -184,7 +184,7 @@
                 dataType:"json",
                 
                 success: function(result){
-                    console.log(result);
+                    alert(result);
                 }
             }) 
         });
