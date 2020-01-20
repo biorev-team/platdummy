@@ -106,7 +106,7 @@
     <!-- Main content -->
     <div class="content">
       <div class="container-fluid">
-            <form role="form" method="post" action="<?php echo htmlspecialchars( $_SERVER['PHP_SELF'] ); ?>">
+            <form role="form">
                 <div class="card-body">
                   <div class="form-group">
                     <label for="name">Name</label>
