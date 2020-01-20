@@ -14,7 +14,18 @@
   <link rel="stylesheet" href="../AdminLTE-3.0.1/dist/css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
-</head>
+        <!-- Select2 -->
+  <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">  
+    <style>
+        .select2-container--default .select2-selection--single{
+            height: 36px;
+        }    
+        .select2-container--default .select2-selection--single .select2-selection__arrow{
+            top:4px;
+        }
+    </style>
+    </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
 
@@ -107,27 +118,67 @@
       <div class="container-fluid">
             <form role="form">
                 <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
                   <div class="form-group">
                     <label for="name">Area Name:</label>
                     <input style="text-transform:capitalize;" type="text" class="form-control" id="name" placeholder="Enter area name" name="name">
-                      
                   </div>
+                        </div>
+                        <div class="col-sm-6">
+
                   <div class="form-group">
-                    <label for="address">Address:</label>
+                    <label for="address">Area Address:</label>
                     <input type="text" class="form-control" id="address" placeholder="Enter area address" name="email">
                   </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                    <div class="form-group">
+                  <label>Assign Builder</label>
+                  <select class="form-control select2" id="selectBuilder">
+                    <option selected disabled>Nothing Selected</option>
+                  </select>
+                </div>
+                            </div>
+                        </div>
                   <div class="form-group">
-                    <label for="contact">Primary Image</label>
-                    <input type="text" class="form-control" id="contact" placeholder="Enter contact number" name="contact">
-                  </div>
+                    <label> Primary Image:</label>
+             <div class="margin-bottom margin-top">
+                 <input type="file" class="form-control" name="fileToUpload" id="avatar"><br>
+                 <label id="labelForAvatar" for="avatar">
+                     <img src="../images/placeholder-logo.png" id="imgupload">
+                 </label>
+             </div> 
+                    </div>    
                   
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="button" class="btn btn-primary" name="add" id="addButton">Add New</button>
+                  <button type="button" class="btn btn-primary" name="add" id="addButton" value="false">Add New</button>
                 </div>
               </form>
+          
+          <form role="form">
+                <div class="card-body">
+                    <div class="form-group">
+                    <label> Select File:</label>
+             <div class="margin-bottom margin-top">
+                 <input type="file" class="form-control" name="file" id="file">
+             </div> 
+                    </div>           
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="button" class="btn btn-primary" id="import" value="false">Import File</button>
+                </div>
+              </form>
+          
         <!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
@@ -163,30 +214,95 @@
 <script src="../AdminLTE-3.0.1/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="../AdminLTE-3.0.1/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="../AdminLTE-3.0.1/plugins/select2/js/select2.full.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
+    
+
     <script type="text/javascript">
         
-        $("#addButton").click(function(){
+        var imageAddress = "G:\Ampps\www\platdummy\images\primary_images\\";
+                //Initialize Select2 Elements
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
+        var selectedOption;
+        var areaName    = $("#name").val();
+        var areaAddress = $("#address").val();
+        $("#avatar").change(function(){
+        var pImageName = $('#avatar').val().split('\\').pop() + $.now();
+//             
+       });
+        
+//        console.log(areaPimage);
+//AJAX FOR READING BUILDER
+        $.ajax({
+            type: "POST",
+            url: "../api/builder/read.php",
             
-            var name  = $("#name").val();
-            var email = $("#email").val();
-            var contact = $("#contact").val();
+            
+            success:function(result){
+                var id = 0;
+                $.each(result["data"],function(){
+                    $("#selectBuilder").append('<option value = ' + result["data"][id]["builder_id"] + ' >' + result["data"][id]["builder_name"] + '</option>' ); 
+                    id++;
+                });     
+            }
+        })
+        
+        
+        
+        $( "#selectBuilder" ).change(function() {
+                        var builderId;
+            $( "#selectBuilder option:selected" ).each(function() {
+                        selectedOption = $( this ).html();
+                        builderId = $(this).val();
+                    });
+            var pImageName;
+                $("#avatar").change(function(){
+                pImageName = $('#avatar').val().split('\\').pop() + $.now();
+                    
+                    $("#addButton").click(function(){
+                        $.ajax({
+                            type: "POST",
+                            url : "../api/area/create.php",
+                            data: JSON.stringify({
+                                "builder_id": builderId,
+                                "area_name" : areaName,
+                                "area_address" : areaAddress,
+                                "primary_image" : pImageName
+                            }),
+                            dataType :"json",
+                            
+                            success: function(result){
+                                console.log(result);
+                            }
+                        })  
+                    });
+                    
+                    
+                });
+            
+
+//            console.log(selectedOption);
+//            console.log(builderId);
+            }).trigger( "change" );
+        
+                $("#import").click(function(){
             $.ajax({
                 type: "POST",
-                url: "../api/builder/create.php",
-                data: JSON.stringify({
-                    "builder_name" : name,
-                    "email" : email,
-                    "contact" : contact
-                }),
-                dataType:"json",
+                url: "../api/include/functions.php",
+                data : "check=import",
                 
                 success: function(result){
                     console.log(result);
                 }
-            }) 
+            })
         });
+            
         
         function readFile() {
     if(this.files[0].size > 1000000){
@@ -199,7 +315,6 @@
             FR.onload = function(e) {
               document.getElementById("imgupload").src = e.target.result;
               document.getElementById("imgupload").style.width = "200px";
-                
             };
             FR.readAsDataURL( this.files[0] );
           }
