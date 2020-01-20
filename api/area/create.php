@@ -22,13 +22,15 @@ $message["body"] = array();
 
 if(!empty($data->area_name)&&
    !empty($data->area_address)&&
-   !empty($data->primary_image)
+   !empty($data->primary_image)&&
+   !empty($data->builder_id)
   ){
     
     // intialize the parameters
     $area->area_name = $data->area_name;
     $area->area_address = $data->area_address;
     $area->primary_image = $data->primary_image;
+    $area->builder_id = $data->builder_id;
     if($area->create()){
         $message["success"]=true;
         array_push($message["body"],"Area added successfully");
@@ -48,7 +50,7 @@ if(!empty($data->area_name)&&
  $error = array();
  $error["response"] =  http_response_code(400);    
  $error["status"] = true;
- $error["message"] ="Data is incomplete."; 
+ $error["error"] ="Data is incomplete."; 
     // tell the user
     echo json_encode($error);
       

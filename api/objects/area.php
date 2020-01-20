@@ -39,12 +39,12 @@ class Area{
         else{
             
              // Query to insert    
-        $query = "INSERT INTO areas_info(area_name,area_address,primary_image) VALUES (?,?,?)";
+        $query = "INSERT INTO areas_info(builder_id,area_name,area_address,primary_image) VALUES (?,?,?,?)";
         
         $stmt = $this->connection->prepare($query);
     
         // Bind the parameters
-        $stmt->bind_param("sss",$this->area_name,$this->area_address,$this->primary_image);
+        $stmt->bind_param("isss",$this->builder_id,$this->area_name,$this->area_address,$this->primary_image);
         if($stmt->execute()){
             return true;
         }

@@ -17,17 +17,18 @@ $conn = $dbConn->connect();
 //    header("HTTP/1.1 404 Not Found");
 //    exit();
 //}
-
+$builder_info = array();
+$builder_info["method"]=$_SERVER["REQUEST_METHOD"];
+$builder_info["response"]=http_response_code(200);
+$builder_info["success"] ="";
 $builder = new Builder($conn);
 $stmt = $builder->read();
 $count = $stmt->num_rows;
 if($count > 0){
-    $builder = array();
-    $builder["method"]=$_SERVER["REQUEST_METHOD"];
-    $builder["response"]=http_response_code(200);
-    $builder["success"]=true;
-    $builder["data"] = array();
-    $builder["count"] = $count;
+    
+    $builder_info["success"]=true;
+    $builder_info["data"] = array();
+    $builder_info["count"] = $count;
 
     while ($row = mysqli_fetch_array($stmt)){
 
@@ -42,21 +43,18 @@ if($count > 0){
               "email" => $email
         );
 
-        array_push($builder["data"], $p);
+        array_push($builder_info["data"], $p);
     }
     
-    echo json_encode($builder,JSON_PRETTY_PRINT);
+    echo json_encode($builder_info,JSON_PRETTY_PRINT);
 }
 
 else {
-// set response code - 404 Not found
-    $error_arr = array();   
-    $error_arr["success"] = false;
-    $error_arr["response"] =http_response_code(404);
-    $error_arr["data"] = array();
-    echo json_encode(
-        $error_arr,JSON_PRETTY_PRINT
-    );
+// set response code - 404 Not found   
+    $builder_info["success"] = false;
+    $builder_info["data"] = array();
+    array_push($builder["data"],"Not found");
+    echo json_encode($builder_info,JSON_PRETTY_PRINT);
 }
 
 

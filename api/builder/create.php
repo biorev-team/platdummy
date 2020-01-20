@@ -21,9 +21,15 @@ $conn = $dbConn->connect();
   $builder = new Builder($conn);
 //  $builder_name = $_GET['builder_name'];
 //  $status = $_GET['status'];
-//// get posted data
+// get posted data
 $data = json_decode(file_get_contents("php://input"));
 
+// Response data prepared
+$message =array();
+$message["method"]=$_SERVER["REQUEST_METHOD"];
+$message["success"] = "";
+$message["response"] =http_response_code(); 
+$message["body"] = array(); 
 // make sure data is not empty
 if(
     !empty($data->builder_name) &&
@@ -35,30 +41,19 @@ if(
     $builder->builder_name = $data->builder_name;
     $builder->email = $data->email;
     $builder->contact = $data->contact;
-//    $builder->updated_at =$data->updated_at;
-//    $builder->created_at =$data->created_at;
-//    $builder->contact =$data->contact;
  
     // create the product
     if($builder->create_builder()){
- 
-        $arr["method"]=$_SERVER["REQUEST_METHOD"];
-        $arr["success"] = true;
-        $arr["response"] =http_response_code();
-        $arr["body"] = array();  
-      array_push($arr["body"], "Added successfully");
-      echo(json_encode($arr,JSON_PRETTY_PRINT));
+      array_push($message["body"], "Added successfully");
+      echo(json_encode($message,JSON_PRETTY_PRINT));
     }
  
     // if unable to create the builder, tell the user
-    else{
- 
-        $error = array();
-        $error["response"] =  http_response_code();    
-        $error["status"] = false;
-        $error["message"] ="Unable to create new builder into the database."; 
+    else{ 
+        $message["success"] = false;
+        $message["message"] = "Email already exist. Select an different email address"; 
     // tell the user
-       echo json_encode($error);
+       echo json_encode($message);
     }
 }
  
@@ -68,12 +63,10 @@ else{
     // set response code - 400 bad request
    // $date = new DateTime(null, new DateTimeZone('Asia/Calcutta'));
     //$date->format('Y-m-d H:i:s');
- $error = array();
- $error["response"] =  http_response_code(400);    
- $error["status"] = false;
- $error["message"] ="Unable to create new builder into the database. Data is incomplete."; 
+ $message["success"]= false;
+ $message["message"] ="Unable to create new builder into the database. Data is incomplete."; 
     // tell the user
-    echo json_encode($error);
+    echo json_encode($message);
 }
 
 

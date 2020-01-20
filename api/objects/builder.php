@@ -46,33 +46,43 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
      }
      // CREAT NEW BUILDER
      public function create_builder(){
-         
-         // query to insert record
-    $query = "INSERT INTO
-                builders_info(builder_name,email,status,updated_at,created_at,contact) VALUES(?,?,?,?,?,?) 
-            ";
- 
+        
     // prepare query
     $stmt = $this->connection->prepare($query);
     date_default_timezone_set('Asia/Calcutta');
     // sanitize
-    $this->builder_name=htmlspecialchars(strip_tags($this->builder_name));
     $this->email = htmlspecialchars(strip_tags($this->email));     
+       
+          //SELECT query 
+    $selectQry = "SELECT email FROM builders_info WHERE email='$this->email'";     
+         // query to insert record
+    $query = "INSERT INTO
+                builders_info(builder_name,email,status,updated_at,created_at,contact) VALUES(?,?,?,?,?,?) 
+            ";
+    $res = mysqli_query($this->connection,$selectQry);
+     if($res->num_rows>0){
+         return false;
+     }
+    else{
+    $this->builder_name=htmlspecialchars(strip_tags($this->builder_name));
     $this->status= "active";
     $this->updated_at= date("Y-m-d H:i:s");
     $this->created_at=date("Y-m-d H:i:s");
-    $this->contact=htmlspecialchars(strip_tags($this->contact));     
- 
-    // bind values
+    $this->contact=htmlspecialchars(strip_tags($this->contact)); 
+    // Prepare query
+    $stmt = $this->connection->prepare($query);    
+        // bind values
     $stmt->bind_param("ssssss", $this->builder_name,$this->email,$this->status,$this->updated_at,$this->created_at,$this->contact);
-    
- 
+
     // execute query
     if($stmt->execute()){
         return true;
     }
- 
+      else {
     return false;
+ }
+             
+         }
          
      }
      // DELETE A BUILDER FROM THE DATABASE USING THE BUILDER ID
