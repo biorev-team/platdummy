@@ -257,7 +257,7 @@ $conn = $dbConn->connect();
         var builderId = localStorage.getItem("builderid");
         $.ajax({
                 type: "GET",
-                url: "../api/builder/single.php",
+                url: "../api/index.php?module=builder&id="+builderId,
                 data: "id=" + builderId,
                 success: function(result){
                     $("#name").val(result["body"][0]["builder_name"]);
@@ -271,11 +271,11 @@ $conn = $dbConn->connect();
                 var email   = $("#email").val();
                 var contact = $("#contact").val();
             $.ajax({
-                type: "POST",
-                url : "../api/builder/update.php",
+                type: "PUT",
+                url : "../api/index.php?module=builder",
                 data: JSON.stringify({
                     "builder_id": builderId,  
-                    "name": name,
+                    "builder_name": name,
                     "email":email,
                     "contact":contact
             }),

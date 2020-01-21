@@ -243,19 +243,20 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
 $(document).ready(function(){
            
             $.ajax({
-                type: "POST",
-                url: "api/builder/read.php",
+                type: "GET",
+                url: "api/index.php?module=builder",
                 
                 success: function(result){
+                    console.log(result);
                     var id =0;
-                    $.each(result["data"], function(){
+                    $.each(result["body"], function(){
                         
-                        var builderId       = result["data"][id]["builder_id"];
-                        var builderName     = result["data"][id]["builder_name"];
-                        var builderContact  = result["data"][id]["contact"];
-                        var builderStatus   = result["data"][id]["status"];
-                        var builderArea     = result["data"][id]["area"];
-                        var email           = result["data"][id]["email"];
+                        var builderId       = result["body"][id]["builder_id"];
+                        var builderName     = result["body"][id]["builder_name"];
+                        var builderContact  = result["body"][id]["contact"];
+                        var builderStatus   = result["body"][id]["status"];
+                        var builderArea     = result["body"][id]["area"];
+                        var email           = result["body"][id]["email"];
                         
                         $("tbody").append("<tr><td>" + builderId + "</td><td>" +builderName + "</td><td>" + email +"</td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td><button type='button' class='btn btn-block btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button></td></tr>");
                         id++;
