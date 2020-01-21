@@ -235,6 +235,7 @@
         var selectedOption;
         var pImageName;
         var builderId;
+        var lots = []; 
         
 //AJAX FOR READING BUILDER
         $.ajax({
@@ -272,11 +273,13 @@
          $("#addButton").click(function(){
              var areaName   = $("#name").val();
              var areaAddress = $("#address").val();
-             
+//                    console.log(lots);
+
                         $.ajax({
                             type: "POST",
                             url : "../api/area/create.php",
                             data: JSON.stringify({
+                                "lots" : lots,
                                 "builder_id": builderId,
                                 "area_name" : areaName,
                                 "area_address" : areaAddress,
@@ -320,6 +323,7 @@
                 contentType: false,
                 cache: false,
                 processData:false,
+                dataType:"json",
                 
                 success: function(result){
                     if(result == "Error1"){
@@ -330,13 +334,14 @@
                     }
                     else{
                         console.log(result);
+                        lots = [result];
+                        
                     }
                 }
             })
     
                      });
         
-       
             
 //        Display Image
         function readFile() {

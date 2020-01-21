@@ -27,13 +27,12 @@ $conn =$db_conn->connect();
                    "alias" => $alias,
                    "lot_status" => $lot_status,
                    "lot_price" => $lot_price
-                   
                );
 //                $query = "  
 //                INSERT INTO lots (lot_id, area_id, alias, lot_status, lot_price, status, created_at, updated_at) VALUES (NULL,'', '$alias', '$lot_status', '$lot_price', 'active', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP() )";  
 //                mysqli_query($conn, $query);  
            }  
-          echo json_encode($array)
+          print_r (json_encode($array));
 //          echo "Successfully Added";
       }  
       else  

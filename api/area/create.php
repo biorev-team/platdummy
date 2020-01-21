@@ -19,7 +19,6 @@ $message["method"] = $_SERVER["REQUEST_METHOD"];
 $message["response"]= http_response_code();
 $message["success"]="";
 $message["body"] = array();
-
 if(!empty($data->area_name)&&
    !empty($data->area_address)&&
    !empty($data->primary_image)&&
