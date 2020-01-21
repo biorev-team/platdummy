@@ -301,9 +301,7 @@
                                     window.location.href="area.php";
                                 }
                                 })
-                               if(result["success"] == " true"){
-                                   $("#addButton").val("true");  
-                               } 
+                               
                             }
                         })  
                     });
@@ -311,7 +309,7 @@
 //        Import AJAX
         
                 $("#import").click(function(){
-                    if($("#addButton").val() == true){
+                    
                     var file_data = $('#file').prop('files')[0];   
             var form_data = new FormData();                  
             form_data.append('file', file_data);
@@ -331,15 +329,11 @@
                         alert("Please select file");
                     }
                     else{
-                        alert(result);
+                        console.log(result);
                     }
                 }
             })
-       
-        }
-                     else{
-            alert("Please add area first");
-        }
+    
                      });
         
        
