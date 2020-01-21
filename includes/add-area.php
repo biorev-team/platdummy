@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">  
         <!--        SweetAlert-->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.6.0/dist/sweetalert2.all.min.js"></script>    <style>
+        <style>
         .select2-container--default .select2-selection--single{
             height: 36px;
         }    
@@ -215,6 +215,7 @@
 <script src="../AdminLTE-3.0.1/plugins/jquery/jquery.min.js"></script>
 <!-- Bootstrap 4 -->
 <script src="../AdminLTE-3.0.1/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!--select2-->
     <script src="../AdminLTE-3.0.1/plugins/select2/js/select2.full.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
@@ -239,19 +240,20 @@
         
 //AJAX FOR READING BUILDER
         $.ajax({
-            type: "POST",
-            url: "../api/builder/read.php",
+            type: "GET",
+            url: "../api/index.php?module=builder",
             
             
             success:function(result){
                 var id = 0;
-                $.each(result["data"],function(){
-                    $("#selectBuilder").append('<option value = ' + result["data"][id]["builder_id"] + ' >' + result["data"][id]["builder_name"] + '</option>' ); 
+
+                $.each(result["body"],function(){
+                    $("#selectBuilder").append('<option value = ' + result["body"][id]["builder_id"] + ' >' + result["body"][id]["builder_name"] + ' - ' +result["body"][id]["email"] + '</option>' ); 
                     id++;
                 });     
             }
         })
-        
+            
         
         
         $( "#selectBuilder" ).change(function() {

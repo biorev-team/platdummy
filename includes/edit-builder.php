@@ -102,6 +102,17 @@ $conn = $dbConn->connect();
   <link rel="stylesheet" href="../AdminLTE-3.0.1/dist/css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+          <!-- Select2 -->
+  <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css"> 
+        <style>
+        .select2-container--default .select2-selection--single{
+            height: 36px;
+        }    
+        .select2-container--default .select2-selection--single .select2-selection__arrow{
+            top:4px;
+        }
+    </style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -199,15 +210,18 @@ $conn = $dbConn->connect();
                     <label for="name">Name</label>
                     <input style="text-transform:capitalize;" type="text" class="form-control" id="name" placeholder="Enter name" name="name">
                   </div>
-                  <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
-                  </div>
+                 
                   <div class="form-group">
                     <label for="contact">Contact</label>
                     <input type="text" class="form-control" id="contact" placeholder="Enter contact number" name="contact">
                   </div>
-                  
+                  <div class="form-group">
+                  <label>Select status</label>
+                  <select class="form-control select2" id="selectBuilder">
+                      <option>active</option>
+                      <option>passive</option>
+                  </select>
+                </div>
                 </div>
                 <!-- /.card-body -->
 
@@ -252,23 +266,46 @@ $conn = $dbConn->connect();
 <script src="../AdminLTE-3.0.1/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
+    <!--select2-->
+    <script src="../AdminLTE-3.0.1/plugins/select2/js/select2.full.min.js"></script>
+    <!--SweetAlert-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.6.0/dist/sweetalert2.all.min.js"></script>
     <script type="text/javascript">
-        
+        //Initialize Select2 Elements
+    $('.select2').select2();
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    });
+
         var builderId = localStorage.getItem("builderid");
+        var selectedOption;
         $.ajax({
                 type: "GET",
                 url: "../api/index.php?module=builder&id="+builderId,
                 data: "id=" + builderId,
                 success: function(result){
+                    console.log(result);
                     $("#name").val(result["body"][0]["builder_name"]);
-                    $("#email").val(result["body"][0]["email"]); 
-                    $("#contact").val(result["body"][0]["contact"]);
+                    $("#contact").val(result["body"][0]["contact"]); 
+
                 }
             })
+//        selecting the status 
+         $( "#selectBuilder" ).change(function() {
+            
+            $( "#selectBuilder option:selected" ).each(function() {
+                        selectedOption = $(this).html();
+                        
+                //                console.log(selectedOption);
+                
+                    });
+            }).trigger( "change" );
         
         $("#saveButton").click(function(){
                 var name    = $("#name").val();
-                var email   = $("#email").val();
+                var status  = selectedOption;
                 var contact = $("#contact").val();
             $.ajax({
                 type: "PUT",
@@ -276,7 +313,7 @@ $conn = $dbConn->connect();
                 data: JSON.stringify({
                     "builder_id": builderId,  
                     "builder_name": name,
-                    "email":email,
+                    "status":status,
                     "contact":contact
             }),
                 dataType:"json",
@@ -284,6 +321,37 @@ $conn = $dbConn->connect();
                 
                 success:function(result){
                     console.log(result);
+                  if(result["success"]){
+                      
+                       Swal.fire({
+                                title: '',
+                                text: result["body"],
+                                icon: 'success',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Back to list'
+                                }).then((next) => {
+                                if (next.value) {
+                                    window.location.href="../admin-panel.php";
+                                }
+                                }) 
+                    }
+                    else{
+                        Swal.fire({
+                                title: '',
+                                text: result["body"],
+                                icon: 'error',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Back to list'
+                                }).then((next) => {
+                                if (next.value) {
+                                    window.location.href="../admin-panel.php";
+                                }
+                                })
+                    }
                 }
                 
             }) 

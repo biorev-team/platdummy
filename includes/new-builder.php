@@ -166,6 +166,9 @@
 <script src="../AdminLTE-3.0.1/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
+    <!--SweetAlert-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.6.0/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.6.0/dist/sweetalert2.all.min.js"></script>
     <script type="text/javascript">
         
         $("#addButton").click(function(){
@@ -175,7 +178,7 @@
             var contact = $("#contact").val();
             $.ajax({
                 type: "POST",
-                url: "../api/builder/create.php",
+                url: "../api/index.php?module=builder",
                 data: JSON.stringify({
                     "builder_name" : name,
                     "email" : email,
@@ -184,7 +187,36 @@
                 dataType:"json",
                 
                 success: function(result){
-                    console.log(result);
+                    if(result["success"]){
+                       Swal.fire({
+                                title: '',
+                                text: result["body"],
+                                icon: 'success',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Back to list'
+                                }).then((next) => {
+                                if (next.value) {
+                                    window.location.href="../admin-panel.php";
+                                }
+                                }) 
+                    }
+                    else{
+                        Swal.fire({
+                                title: '',
+                                text: result["body"],
+                                icon: 'error',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Back to list'
+                                }).then((next) => {
+                                if (next.value) {
+                                    window.location.href="../admin-panel.php";
+                                }
+                                })
+                    }
                 }
             }) 
         });

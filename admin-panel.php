@@ -235,6 +235,8 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
 <!-- AdminLTE App -->
 <script src="AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
 <script src="AdminLTE-3.0.1/dist/js/demo.js"></script>
+    <!--SweetAlert-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.6.0/dist/sweetalert2.all.min.js"></script>
     <script type="text/javascript">
         $("#add").click(function(){
             window.location.href="includes/new-builder.php"; 
@@ -249,6 +251,7 @@ $(document).ready(function(){
                 success: function(result){
                     console.log(result);
                     var id =0;
+                    var snumber = 1;
                     $.each(result["body"], function(){
                         
                         var builderId       = result["body"][id]["builder_id"];
@@ -258,10 +261,15 @@ $(document).ready(function(){
                         var builderArea     = result["body"][id]["area"];
                         var email           = result["body"][id]["email"];
                         
-                        $("tbody").append("<tr><td>" + builderId + "</td><td>" +builderName + "</td><td>" + email +"</td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td><button type='button' class='btn btn-block btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button></td></tr>");
-                        id++;
-                        
-                  
+//                        console.log(builderStatus);
+                            
+                            if( builderStatus == "active" ){
+                            
+                        $("tbody").append("<tr><td>" + snumber  + "</td><td>" +builderName + "</td><td>" + email +"</td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td><div class='btn-group'><button type='button' class='btn btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button><button type='button' class='btn btn-outline-danger delete' value=" + builderId + " >Delete</button></div></td></tr>");
+                         snumber++
+                            }
+                       
+                    id++;
                        });
                     
                          $(".edit").click(function(){
@@ -270,6 +278,41 @@ $(document).ready(function(){
                              window.location.href ="includes/edit-builder.php";
                     });
                     
+                      $(".delete").click(function(){
+                          
+                          Swal.fire({
+                            title: 'Are you sure?',
+                              text: "You won't be able to revert this!",
+                              icon: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Yes, delete it!'
+                          }).then((yes) => {
+                              if (yes.value) {
+                                  Swal.fire(
+                                      'Deleted!',
+                                      'Builder has been deleted.',
+                                      'success')
+                          
+                            var builderId = $(this).val();    
+                            $.ajax({
+                                type: "DELETE",
+                                url : "api/index.php?module=builder",
+                                data: JSON.stringify({
+                                      "builder_id": builderId
+                                }),
+                                dataType: "json",
+                                
+                                success: function(result){
+                                    window.location.reload();
+                                }
+                                
+                            });
+                                  
+                              }
+                          })
+                    });
                 }
             })
             

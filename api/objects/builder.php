@@ -114,7 +114,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
          $updateQuery = "UPDATE builders_info
          SET
          builder_name ='$this->builder_name',
-         email ='$this->email',
+         status ='$this->status',
          contact='$this->contact' 
          WHERE builder_id ='$this->builder_id'";
          if(mysqli_query($this->connection,$updateQuery)){
@@ -210,6 +210,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
  
     // create the product
                     if($this->create_builder()){
+                    $message["success"] = true;    
                     array_push($message["body"], "Added successfully");
                     return $message;
     }
@@ -240,13 +241,13 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
             
          if(!empty($data->builder_id)&&
            !empty($data->builder_name)&&
-           !empty($data->email)&&
+           !empty($data->status)&&
            !empty($data->contact)
           ){
     // set all the properties 
         $this->builder_id = $data->builder_id; 
         $this->builder_name = $data->builder_name;
-        $this->email = $data->email;
+        $this->status = $data->status;
         $this->contact = $data->contact;
             if($this->update_builder()){
                     $message["success"] = true;
@@ -266,7 +267,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
             else{
                     $message["success"] = false;
                     $message["body"] = array(); 
-                    array_push($message["body"],array("message"=>"Please provide all the data required to update"));
+                    array_push($message["body"],"Please provide all the data required to update");
                     return $message;    
                 }
         // End of put case here        
