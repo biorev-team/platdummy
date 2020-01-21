@@ -1,5 +1,0 @@
-api.php/builders/read
-
-api.php?type=builder&action=create&data={}
-
-/builder/read_single.php
