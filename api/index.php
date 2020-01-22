@@ -3,6 +3,7 @@
 include_once('/include/dbConnect.php');
 include_once('/objects/builder.php');
 include_once('/objects/area.php');
+include_once('/objects/lot.php');
 // Required headers
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
@@ -31,6 +32,14 @@ $conn = $dbcon->connect();
            // start of builder case
             $builder = new Builder($conn);
             $response = $builder->processRequest($requestMethod,$id);  
+            echo json_encode($response);
+           // end of builder case
+           break;
+           
+         case 'lot':
+           // start of builder case
+            $lot = new Lot($conn);
+            $response = $lot->processRequest($requestMethod,$id);  
             echo json_encode($response);
            // end of builder case
            break;

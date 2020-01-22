@@ -18,6 +18,12 @@
     $this->connection = $conn;
          
     } 
+      // Select Area table information
+    public function read(){
+        $query = "SELECT * FROM lots";
+        $resultSet = mysqli_query($this->connection,$query);
+        return $resultSet;
+    }
     //Function to update lots 
      public function update($id){
         
@@ -65,6 +71,34 @@
           // switch statements start here
           
           switch($requestMethod){
+              case 'GET':
+                $stmt = $this->read();
+                $count = $stmt->num_rows;
+                if($count>0){
+                    $message["success"]=true;
+                    $message["count"] = $count;
+                while($row = mysqli_fetch_array($stmt)){
+                    extract($row);
+                    $p = array(
+                     "lot_id"=>$lot_id,
+                    "area_id"=>$area_id,
+                    "alias" => $alias,
+                    "lot_status" => $lot_status,    
+                    "lot_price" =>$lot_price,
+                    "status" => $status   
+                    );
+                    array_push($message["body"],$p);
+                    
+                }  
+                    return $message;
+                }
+                  else {
+                      
+                    $message["success"]=false;
+                    array_push($message["body"], "Something went wrong.");
+                    return $message;
+                  }
+  
                   
               case 'POST':
                   // code for post goes here
