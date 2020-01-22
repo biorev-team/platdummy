@@ -55,7 +55,7 @@
                         WHERE lot_id='$id'
                         ";
          if(mysqli_query($this->connection,$updateQuery)){
-             return "con".$id;
+             return true;
          }
          else{
              return false;
@@ -166,6 +166,33 @@
                       }
                   }
                       break;
+              case 'PUT':
+                  $data = json_decode(file_get_contents("php://input"));
+                  $id = $data->lot_id;
+                  if(!empty($id)){
+                      if($this->update($id)){
+                         $message["success"] = true;
+                         $message["body"] = array();  
+                         array_push($message["body"], "Updated successfully");
+                         return $message;
+                          
+                      }
+                      else {
+                          $message["success"] = false;
+                          $message["body"] = array();  
+                          array_push($message["body"], "Something went wrong, could not updated");
+                          return $message;
+                          
+                      }
+                
+                  }
+                  
+                  else {
+                        $message["success"] = false;
+                        array_push($message["body"], "Id does not exist ");
+                        return $message; 
+                  }
+                break;  
               default: 
                             $message["success"]=false;
                             array_push($message["body"], "Action is not allowable.");
