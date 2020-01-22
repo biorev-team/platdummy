@@ -133,8 +133,18 @@ class Area{
                 }
             }    
         
-        }
+       
         
+        // CASE POST
+        
+        case 'POST': 
+            
+            $data = json_decode(file_get_contents("php://input"));
+        
+        print_r( $data->lots);
+       // echo count($data->lots);
+                break;
+         }
     }
 }
 

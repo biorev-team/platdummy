@@ -249,7 +249,7 @@ $(document).ready(function(){
                 url: "api/index.php?module=builder",
                 
                 success: function(result){
-                    console.log(result);
+//                    console.log(result);
                     var id =0;
                     var snumber = 1;
                     $.each(result["body"], function(){

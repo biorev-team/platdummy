@@ -279,7 +279,7 @@
 
                         $.ajax({
                             type: "POST",
-                            url : "../api/area/create.php",
+                            url : "../api/index.php?module=area",
                             data: JSON.stringify({
                                 "lots" : lots,
                                 "builder_id": builderId,
@@ -291,7 +291,7 @@
                             
                             success: function(result){
                                 
-//                                console.log(result);
+                                console.log(result);
                                
                                 Swal.fire({
                                 title: '',
@@ -325,7 +325,6 @@
                 contentType: false,
                 cache: false,
                 processData:false,
-                dataType:"json",
                 
                 success: function(result){
                     if(result == "Error1"){
@@ -336,7 +335,7 @@
                     }
                     else{
                         console.log(result);
-                        lots = [result];
+                        lots = result;
                         
                     }
                 }
