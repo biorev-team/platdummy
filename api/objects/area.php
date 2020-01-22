@@ -55,15 +55,18 @@ class Area{
         
     }
     public function read_single($id){
-        $query = "SELECT * FROM areas_info WHERE area_id='$id'";
+        $query = "SELECT areas_info.area_name, areas_info.area_id, areas_info.area_address, areas_info.status, builders_info.builder_name FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id WHERE areas_info.area_id='$id'" ;
         $rs = mysqli_query($this->connection,$query);
         if(mysqli_num_rows($rs)){
             extract(mysqli_fetch_array($rs));
             $this->area_id = $area_id;
-            $this->builder_id = $builder_id;
+            $this->status = $status;
             $this->area_name = $area_name;
             $this->primary_image = $primary_image;
             $this->images = $images;
+            $this->builder_name = $builder_name;
+            $this->area_address = $area_address;
+            
             return true;
         }
         else {
@@ -94,7 +97,8 @@ class Area{
                                 'area_name' => $this->area_name,
                                 'primary_image'=> $this->primary_image,
                                 'image'=>$this->image,
-                                'status' =>$this->status
+                                'status' =>$this->status,
+                                'area_address' =>$this->area_address
                                     );
                                 array_push($message["body"], $single_data);
                                 return $message;
@@ -118,6 +122,7 @@ class Area{
                     "area_id"=>$area_id,
                     "builder_name"=>$builder_name,
                     "area_name" => $area_name,
+                    "area_address" => $area_address,    
                     "primary_image" =>$primary_image,
                     "images" => $images,
                     "status" => $status   
