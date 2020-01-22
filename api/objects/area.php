@@ -2,7 +2,7 @@
 class Area{
     //Properties
     public $area_id;
-    public $builder_id;
+    public $builder_name;
     public $area_name;
     public $area_address;
     public $primary_image;
@@ -20,7 +20,7 @@ class Area{
 
     // Select Area table information
     public function read(){
-        $query = "SELECT * from areas_info";
+        $query = "SELECT areas_info.area_name, areas_info.area_id, areas_info.area_address, areas_info.status, builders_info.builder_name FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id";
         $resultSet = mysqli_query($this->connection,$query);
         return $resultSet;
     }
@@ -90,10 +90,11 @@ class Area{
                 if($this->read_single($id)){
                 $single_data = array(
                                 'area_id' => $this->area_id,
-                                'builder' => $this->builder_id,
+                                'builder_name' => $this->builder_name,
                                 'area_name' => $this->area_name,
                                 'primary_image'=> $this->primary_image,
                                 'image'=>$this->image,
+                                'status' =>$this->status
                                     );
                                 array_push($message["body"], $single_data);
                                 return $message;
@@ -115,10 +116,11 @@ class Area{
                     extract($row);
                     $p = array(
                     "area_id"=>$area_id,
-                    "builder_id"=>$builder_id,
+                    "builder_name"=>$builder_name,
                     "area_name" => $area_name,
                     "primary_image" =>$primary_image,
-                    "images" => $images    
+                    "images" => $images,
+                    "status" => $status   
                     );
                         array_push($message["body"],$p);
                     
