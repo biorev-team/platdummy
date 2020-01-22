@@ -59,6 +59,20 @@ class Area{
         }
         
     }
+      // DELETE A BUILDER FROM THE DATABASE USING THE BUILDER ID
+     public function delete_area($id){
+         $query = "UPDATE areas_info
+         SET 
+         status ='passive'
+         WHERE area_id='$id'";
+         if(mysqli_query($this->connection,$query)){
+             return true;
+         }
+         else{
+             return false;
+                }
+
+     }
     public function read_single($id){
         $query = "SELECT areas_info.area_name, areas_info.area_id, areas_info.area_address, areas_info.status, builders_info.builder_name FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id WHERE areas_info.area_id='$id'" ;
         $rs = mysqli_query($this->connection,$query);
@@ -237,7 +251,53 @@ class Area{
                     array_push($message["body"], "ID to be updated is null");
                     return $message;
                     
+                }
+                
+//                Delete case here
+                case 'DELETE':
+            //code here Delete case here
+            //get the the id to be deleted
+                $data = json_decode(file_get_contents("php://input"));
+                $id = $data->area_id;
+                if(!empty($id)){
+                    if($this->delete_area($id)){
+                        
+                    $message["success"] = true;
+                    $message["body"] = array();  
+                    array_push($message["body"], "Deleted successfully");
+                    return $message;
+                    }
+                    
+                    else{
+                    $message["success"] = false;
+                    $message["body"] = array();  
+                    array_push($message["body"], "Something went wrong, could not deleted");
+                    return $message;
+                        
+                    }
+                    
+                }
+                else {
+                    
+                    $message["success"] = false;
+                    $message["body"] = array();  
+                    array_push($message["body"], "ID to be deleted is null");
+                    return $message;
+                    
                 }  
+                 break;
+        // End of delete case here.
+           
+            default: 
+                // default case here
+                    $message["success"] = false;
+                    $message["body"] = array();  
+                    array_push($message["body"], "404 Not Found");
+                    return $message;
+                    break;    
+                break;
+       
+                
          }
     }
 }

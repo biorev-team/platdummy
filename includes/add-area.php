@@ -229,7 +229,11 @@
                 var id = 0;
 
                 $.each(result["body"],function(){
+                    if(result["body"][id]["status"] == "passive"){
+                        
                     $("#selectBuilder").append('<option value = ' + result["body"][id]["builder_id"] + ' >' + result["body"][id]["builder_name"] + ' - ' +result["body"][id]["email"] + '</option>' ); 
+                        
+                    }
                     id++;
                 });     
             }

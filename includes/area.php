@@ -224,6 +224,8 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
 <!--select2-->
 <script src="../AdminLTE-3.0.1/plugins/select2/js/select2.full.min.js"></script>
+     <!--SweetAlert-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9.6.0/dist/sweetalert2.all.min.js"></script>
     <script> 
         
         //Initialize Select2 Elements
@@ -275,7 +277,7 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
             
             $( "#selectArea option:selected" ).each(function() {
                         selectedAreaId = $(this).val();
-                console.log(selectedAreaId);
+//                console.log(selectedAreaId);
                     window.location.href="add-lots.php?id="+selectedAreaId+"";
                     });
             });
@@ -289,19 +291,39 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
                     
 //                    DELETE BUTTON
                     $(".delete").click(function(){
-                        var areaId = $(this).val();
                         
+                        Swal.fire({
+                            title: 'Are you sure?',
+                              text: "You won't be able to revert this!",
+                              icon: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'Yes, delete it!'
+                          }).then((yes) => {
+                              if (yes.value) {
+                                  Swal.fire(
+                                      'Deleted!',
+                                      'Builder has been deleted.',
+                                      'success')
+                          
+                            var areaId = $(this).val(); 
                         $.ajax({
                             type: "DELETE",
                             url : "../api/index.php?module=area",
                             data: JSON.stringify({
-                                "id" : areaId 
+                                "area_id" : areaId 
                             }),
                             
                             success:function(result){
-                                console.log(result);
+                                window.location.reload();
                             }
                         })
+                                  
+                              }
+                          })
+                        
+                        
                     });
                 }
             })    
