@@ -155,7 +155,7 @@
                       $this->status = "active";
                         if($this->create()){
                             $message["success"]=true;
-                            array_push($message["body"], "Area added successfully.");
+                            array_push($message["body"], "Lots added successfully.");
                             return $message;
                         }
                       else {

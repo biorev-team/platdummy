@@ -78,7 +78,25 @@ class Area{
             return false;
         }
     }
-    
+    // Update the area status 
+        public function update_status($id){
+            $updateQuery = "UPDATE areas_info
+            SET 
+         status ='active'
+         WHERE area_id=?";
+         $stmt = $this->connection->prepare($query);
+         $this->builder_id=htmlspecialchars(strip_tags($id));
+         $stmt->bind_param("i",$id);
+         // execute query
+        if($stmt->execute()){
+        return true;
+            
+        }
+ 
+        return false;    
+            
+            
+        }
     // Request handler 
     
     public function processRequest($requestMethod,$id){
@@ -186,8 +204,40 @@ class Area{
                      return $message;
                 
             }
-             
             break;
+                // End of case POST
+                
+            // start of PUT case  
+                 case 'PUT':
+            //code here Delete case here
+            //get the the id to be updated
+                $data = json_decode(file_get_contents("php://input"));
+                if(!empty($data->area_id)){
+                    if($this->update_status($data->area_id)){
+                        
+                    $message["success"] = true;
+                    $message["body"] = array();  
+                    array_push($message["body"], "Updated successfully");
+                    return $message;
+                    }
+                    
+                    else{
+                    $message["success"] = false;
+                    $message["body"] = array();  
+                    array_push($message["body"], "Something went wrong, could not updated");
+                    return $message;
+                        
+                    }
+                    
+                }
+                else {
+                    
+                    $message["success"] = false;
+                    $message["body"] = array();  
+                    array_push($message["body"], "ID to be updated is null");
+                    return $message;
+                    
+                }  
          }
     }
 }
