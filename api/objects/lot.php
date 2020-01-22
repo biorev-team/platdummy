@@ -114,6 +114,7 @@
                         if($this->create()){
                             $message["success"]=true;
                             array_push($message["body"], "Area added successfully.");
+                            return $message;
                         }
                       else {
                             $message["success"]=false;
