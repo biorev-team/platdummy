@@ -118,6 +118,7 @@
                       else {
                             $message["success"]=false;
                             array_push($message["body"], "Something went wrong.");
+                            return $message;
                           break;
                       }
                   }
