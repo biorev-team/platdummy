@@ -30,6 +30,10 @@ class Area{
         // select query
         $this->area_name = htmlspecialchars(strip_tags($this->area_name));
         $this->area_address = htmlspecialchars(strip_tags($this->area_address));
+        $this->builder_id = htmlspecialchars(strip_tags($this->builder_id));
+        $this->primary_image = htmlspecialchars(strip_tags($this->primary_image));
+        $this->images = htmlspecialchars(strip_tags($this->images));
+        $this->status = "passive";
         $selectQry = "SELECT area_name FROM areas_info WHERE area_name='$this->area_name'";
         $res = mysqli_query($this->connection,$selectQry);
         if($res->num_rows>0){
@@ -39,13 +43,14 @@ class Area{
         else{
             
              // Query to insert    
-        $query = "INSERT INTO areas_info(builder_id,area_name,area_address,primary_image) VALUES (?,?,?,?)";
+        $query = "INSERT INTO areas_info(builder_id,area_name,area_address,primary_image,images,status) VALUES (?,?,?,?,?,?)";
         
         $stmt = $this->connection->prepare($query);
     
         // Bind the parameters
-        $stmt->bind_param("isss",$this->builder_id,$this->area_name,$this->area_address,$this->primary_image);
+        $stmt->bind_param("isssss",$this->builder_id,$this->area_name,$this->area_address,$this->primary_image,$this->images,$this->status);
         if($stmt->execute()){
+            $this->area_id = $this->connection->insert_id;
             return true;
         }
         else {
@@ -144,13 +149,45 @@ class Area{
         
         // CASE POST
         
-        case 'POST': 
-            
-            $data = json_decode(file_get_contents("php://input"));
+            case 'POST': 
         
-        print_r( $data->lots);
-       // echo count($data->lots);
-                break;
+            $data = json_decode(file_get_contents("php://input"));
+                
+            if(!empty($data->area_name) &&
+               !empty($data->area_address) &&
+               !empty($data->builder_id) &&
+               !empty($data->primary_image)
+              )
+            {
+                // Bind all the properties of area
+                $this->area_name = $data->area_name;
+                $this->area_address = $data->area_address;
+                $this->primary_image = $data->primary_image;
+                $this->builder_id = $data->builder_id;
+                $this->images = $data->images;
+                // call create method to insert the data
+                if($this->create()){
+                    $message["success"] = true;  
+                    $message["id"] = $this->area_id;
+                    array_push($message["body"], "Area added successfully.");
+                    return $message;
+                }
+                
+                else {
+                    $message["success"] = false;    
+                    array_push($message["body"], "Area already exists");
+                    return $message;
+                }
+            }
+            
+            else {
+                    $message["success"]= false;
+                    $message["body"] ="Unable to create new area. Data is incomplete.";     
+                     return $message;
+                
+            }
+             
+            break;
          }
     }
 }

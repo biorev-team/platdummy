@@ -60,7 +60,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
     // sanitize
     $this->email = htmlspecialchars(strip_tags($this->email));     
        
-          //SELECT query 
+          //SELECT query before inserting the builder that if builder email is already registered
     $selectQry = "SELECT email FROM builders_info WHERE email='$this->email'";     
          // query to insert record
     $query = "INSERT INTO
