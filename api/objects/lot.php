@@ -99,7 +99,7 @@
                                  "lot_id"=>$this->lot_id,
                                  "area_id" =>$this->area_id,
                                  "alias" => $this->alias,
-                                 "lot_status" => $this_>lot_status,    
+                                 "lot_status" => $this->lot_status,    
                                  "lot_price" =>$this->lot_price,
                                  "status" => $this->status   
                                     );
@@ -168,6 +168,17 @@
                       break;
               case 'PUT':
                   $data = json_decode(file_get_contents("php://input"));
+                  
+                  if(
+                    !empty($data->alias) &&
+                    !empty($data->lot_price)&&
+                    !empty($data->lot_status)
+                                          
+                  )
+                  {
+                  $this->alias = $data->alias;
+                  $this->lot_price = $data->lot_price;
+                  $this->lot_status = $data->lot_status;
                   $id = $data->lot_id;
                   if(!empty($id)){
                       if($this->update($id)){
@@ -191,6 +202,14 @@
                         $message["success"] = false;
                         array_push($message["body"], "Id does not exist ");
                         return $message; 
+                  }
+                  }
+                  else {
+                       $message["success"] = false;
+                        array_push($message["body"], "Data is in complete ");
+                        return $message; 
+                      
+                      
                   }
                 break;  
               default: 

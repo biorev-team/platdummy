@@ -8,17 +8,16 @@
 
         <title>Add New</title>
         
-        <!--        Bootstrap-->
-       <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/fontawesome-free/css/all.min.css">
+        <!--        Font Awesome-->
+    <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/fontawesome-free/css/all.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="../AdminLTE-3.0.1/dist/css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
         <!-- Select2 -->
   <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2/css/select2.min.css">
-  <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">  
-        <!--        SweetAlert-->
-        <style>
+  <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+         <style>
         .select2-container--default .select2-selection--single{
             height: 36px;
         }    
@@ -163,24 +162,7 @@
                 </div>
               </form>
           
-          <form role="form">
-                <div class="card-body">
-                    <div class="form-group">
-                    <label> Select File:</label>
-             <div class="margin-bottom margin-top">
-                 <input type="file" class="form-control" name="file" id="file">
-             </div> 
-                    </div>           
-
-                </div>
-                <!-- /.card-body -->
-
-                <div class="card-footer">
-                  <button type="button" class="btn btn-primary" id="import">Import File</button>
-                </div>
-              </form>
           
-        <!-- /.row -->
       </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
@@ -236,7 +218,6 @@
         var selectedOption;
         var pImageName;
         var builderId;
-        var lots = []; 
         
 //AJAX FOR READING BUILDER
         $.ajax({
@@ -261,7 +242,6 @@
             $( "#selectBuilder option:selected" ).each(function() {
                         selectedOption = $(this).html();
                         builderId = $(this).val();
-//                console.log(selectedOption);
                 
                     });
             }).trigger( "change" );
@@ -275,13 +255,11 @@
          $("#addButton").click(function(){
              var areaName   = $("#name").val();
              var areaAddress = $("#address").val();
-//                    console.log(lots);
 
                         $.ajax({
                             type: "POST",
                             url : "../api/index.php?module=area",
                             data: JSON.stringify({
-                                "lots" : lots,
                                 "builder_id": builderId,
                                 "area_name" : areaName,
                                 "area_address" : areaAddress,
@@ -292,56 +270,41 @@
                             success: function(result){
                                 
                                 console.log(result);
-                               
-                                Swal.fire({
-                                title: '',
-                                text: result["body"][0],
-                                icon: 'success',
-                                showCancelButton: true,
-                                confirmButtonColor: '#3085d6',
-                                cancelButtonColor: '#d33',
-                                confirmButtonText: 'Back to list'
-                                }).then((next) => {
-                                if (next.value) {
-                                    window.location.href="area.php";
+                                
+                                var areaId = result["id"];
+                                
+                                
+                                if(result["success"]){
+                                
+                                    Swal.fire({
+                                        title: '',
+                                        text: result["body"],
+                                        icon: 'success',
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    }).then((val) => {
+                                        if (val.value) {
+                                                window.location.href="add-lots.php?id=" +areaId +"";
+                                            }
+                                    })
+
+                                
                                 }
-                                })
+                                else{
+                                    
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: result["body"],
+                                    })
                                
+                                }
                             }
                         })  
                     });
         
-//        Import AJAX
-        
-                $("#import").click(function(){
-                    
-                    var file_data = $('#file').prop('files')[0];   
-            var form_data = new FormData();                  
-            form_data.append('file', file_data);
-            $.ajax({
-                type :"POST",
-                url: "../api/include/export.php",
-                data : form_data,
-                contentType: false,
-                cache: false,
-                processData:false,
-                
-                success: function(result){
-                    if(result == "Error1"){
-                        alert("Invalid File");
-                    }
-                    else if(result == "Error2"){
-                        alert("Please select file");
-                    }
-                    else{
-                        console.log(result);
-                        lots = result;
-                        
-                    }
-                }
-            })
-    
-                     });
+  
         
             
 //        Display Image

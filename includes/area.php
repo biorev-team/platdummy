@@ -13,43 +13,7 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
     if($_SESSION['S_EMAIL'] != $adminEmail){
         header("location:../login.php");    
     }
-    else{
-$areaQuery = "SELECT builders_info.builder_name, areas_info.area_name, areas_info.area_id FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active'";
-
-$areaResult = mysqli_query($conn, $areaQuery);
-$counter = 1;
-
-while( $areaRow = mysqli_fetch_array( $areaResult ) ){
-    $areaId       = $areaRow['area_id'];
-    $builderName    = $areaRow['builder_name'];
-    $areaLots = $areaRow['lots'];
-    $areaName    = $areaRow['area_name'];
-    
-    $display.= "<tr>
-                    <td>$areaId</td>
-                    <td>$areaName</td>
-                    <td>$builderName</td>
-                    <td>$areaLots</td>
-                    <td style='width:200px;'><div class='btn-group'><form method='post'><button type='submit' class='btn btn-outline-primary' value='$counter' name='view'>View</button></form>
-                    <button type='button' class='btn btn-outline-danger' value='$counter' name='Delete'>Delete</button></div>
-                    </td>
-                </tr>";
-    $counter++;
-    }
 }
-}
-
-if( isset($_POST['view'] ) ){
-
-$btnValue = $_POST['view'];
-$areaIdQuery = "SELECT area_id FROM areas_info WHERE area_id = '$btnValue'";
-$areaIdResult = mysqli_query($conn, $areaIdQuery);
-$areaIdRow = mysqli_fetch_array($areaIdResult);
-
-    $_SESSION['S_AREA_ID'] = $areaIdRow['area_id'];
-    header("location:view-area.php");
-}
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -67,6 +31,28 @@ $areaIdRow = mysqli_fetch_array($areaIdResult);
   <link rel="stylesheet" href="../AdminLTE-3.0.1/dist/css/adminlte.min.css">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <!-- Select2 -->
+  <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2/css/select2.min.css">
+  <link rel="stylesheet" href="../AdminLTE-3.0.1/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+        
+        <style>
+        .select2-container--default .select2-selection--single{
+            height: 39px;
+            margin-top: 9px;
+            padding-top: 7px;
+            background-color: transparent;
+            border-color: #007bff;
+        }    
+        .select2-container--default .select2-selection--single .select2-selection__arrow{
+            top:6px;
+            color: #007bff;
+        }
+            .select2-container--default .select2-selection--single .select2-selection__rendered{
+                color: #007bff;
+                
+            }
+    </style>
+        
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -143,7 +129,16 @@ $areaIdRow = mysqli_fetch_array($areaIdResult);
         <div class="row mb-2">
           <div class="col-sm-6">
             <h1 class="m-0 text-dark">Areas</h1>
+              <div class="row">
+                  <div class="col-sm-4">
               <button id="addArea" style="width:150px; margin-top:10px;" type="submit" class="btn btn-block btn-outline-primary" >Add New Area</button>
+                      </div>
+                  <div class="col-sm-8">
+                <select class="form-control select2" id="selectArea">
+                    <option selected disabled>Assign lots to pending areas</option>
+                </select> 
+                      </div>
+                  </div>
           </div><!-- /.col -->
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
@@ -174,13 +169,14 @@ $areaIdRow = mysqli_fetch_array($areaIdResult);
                     <tr>
                       <th>S.No</th>
                       <th>Area </th>
+                      <th>Address</th>
                       <th>Builder Assigned</th>
                       <th>Total Lots</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <?php echo $display;?>
+                      
                   </tbody>
                 </table>
               </div>
@@ -226,12 +222,99 @@ $areaIdRow = mysqli_fetch_array($areaIdResult);
 <script src="../AdminLTE-3.0.1/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../AdminLTE-3.0.1/dist/js/adminlte.min.js"></script>
+<!--select2-->
+<script src="../AdminLTE-3.0.1/plugins/select2/js/select2.full.min.js"></script>
     <script> 
-    
+        
+        //Initialize Select2 Elements
+    $('.select2').select2();
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    });
+        
+        var selectedAreaId ;
+
+        $(document).ready(function(){
+            
+            
+            //        FETCHONG DATA FROM DATABASE AND DISPLAYING
+            
+            $.ajax({
+                type: "GET",
+                url: "../api/index.php?module=area",
+                
+                success:function(result){
+//                    console.log(result);
+                    var counter = 0;
+                    var sNumber = 1;
+                    $.each(result["body"], function(){
+                        
+                        var areaName    = result["body"][counter]["area_name"];
+                        var areaId      = result["body"][counter]["area_id"];
+                        var areaAddress = result["body"][counter]["area_address"];
+                        var builderName = result["body"][counter]["builder_name"];
+                        var areaStatus  = result["body"][counter]["status"];
+                        
+                            if(areaStatus == "active"){
+                                
+                                $("tbody").append('<tr><td>' + sNumber + '</td><td>'+areaName+ '</td><td>'+areaAddress+'</td><td>'+builderName+'</td><td>test</td><td><div class="btn-group"><button type="button" class="btn btn-outline-primary view" value="' + areaId + '">View</button><button type="button" class="btn btn-outline-danger delete" value="'+areaId+'">Delete</button></div></td></tr>');
+                                    sNumber++;
+                            }
+                        
+//                    DISPLAYING PASSIVE AREA LIST 
+                                if(areaStatus == "passive"){    
+                    $("#selectArea").append('<option value = "' +areaId + ' ">'+ areaName + '</option>');     
+                    }     
+                        counter++;
+                        
+                    });
+                    
+                    $( "#selectArea" ).change(function() {
+            
+            $( "#selectArea option:selected" ).each(function() {
+                        selectedAreaId = $(this).val();
+                console.log(selectedAreaId);
+                    window.location.href="add-lots.php?id="+selectedAreaId+"";
+                    });
+            });
+                    
+//                   VIEW BUTTON
+                    
+                     $(".view").click(function(){
+                        var areaId = $(this).val();
+                        window.location.href="view-area.php?id="+areaId+"";
+                    });
+                    
+//                    DELETE BUTTON
+                    $(".delete").click(function(){
+                        var areaId = $(this).val();
+                        
+                        $.ajax({
+                            type: "DELETE",
+                            url : "../api/index.php?module=area",
+                            data: JSON.stringify({
+                                "id" : areaId 
+                            }),
+                            
+                            success:function(result){
+                                console.log(result);
+                            }
+                        })
+                    });
+                }
+            })    
+       
+//        ADD NEW BUTTON
+            
         $("#addArea").click(function(){
             window.location.href="add-area.php";  
                 });
+            
+             });
         
     </script>
     </body>
 </html>
+                
