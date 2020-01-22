@@ -80,12 +80,12 @@ class Area{
     }
     // Update the area status 
         public function update_status($id){
+            $id=htmlspecialchars(strip_tags($id));
             $updateQuery = "UPDATE areas_info
             SET 
-         status ='active'
-         WHERE area_id=?";
-         $stmt = $this->connection->prepare($query);
-         $this->builder_id=htmlspecialchars(strip_tags($id));
+                status ='active'
+            WHERE area_id=?";
+         $stmt = $this->connection->prepare($updateQuery);
          $stmt->bind_param("i",$id);
          // execute query
         if($stmt->execute()){

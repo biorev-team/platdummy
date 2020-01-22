@@ -167,6 +167,9 @@
                   }
                       break;
               default: 
+                            $message["success"]=false;
+                            array_push($message["body"], "Action is not allowable.");
+                            return $message;
                 // default case code's goes here.  
                   break;
                   
