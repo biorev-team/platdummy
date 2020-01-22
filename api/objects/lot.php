@@ -24,6 +24,25 @@
         $resultSet = mysqli_query($this->connection,$query);
         return $resultSet;
     }
+     // Function to read individual lot details.
+     public function read_single($id){
+          $query = "SELECT * FROM lots WHERE lot_id='$id'" ;
+          $rs = mysqli_query($this->connection,$query);
+        if(mysqli_num_rows($rs)){
+            extract(mysqli_fetch_array($rs));
+            $this->area_id = $area_id;
+            $this->status = $status;
+            $this->lot_id = $lot_id;
+            $this->alias = $alias;
+            $this->lot_status = $lot_status;
+            $this->lot_price = $lot_price;
+            return true;
+        }
+        else {
+            return false;
+        }
+         
+     }
     //Function to update lots 
      public function update($id){
         
@@ -72,6 +91,29 @@
           
           switch($requestMethod){
               case 'GET':
+                   if(!empty($id)){
+                $message["success"]=true;
+                $message["count"] = 1;
+                if($this->read_single($id)){
+                $single_data = array(
+                                 "lot_id"=>$this->lot_id,
+                                 "area_id" =>$this->area_id,
+                                 "alias" => $this->alias,
+                                 "lot_status" => $this_>lot_status,    
+                                 "lot_price" =>$this->lot_price,
+                                 "status" => $this->status   
+                                    );
+                                array_push($message["body"], $single_data);
+                                return $message;
+                    
+                }
+                 else{
+                        $message["success"] = false;
+                        array_push($message["body"], "Id does not exist ");
+                        return $message;  
+                 }
+            } 
+                  else {
                 $stmt = $this->read();
                 $count = $stmt->num_rows;
                 if($count>0){
@@ -80,7 +122,7 @@
                 while($row = mysqli_fetch_array($stmt)){
                     extract($row);
                     $p = array(
-                     "lot_id"=>$lot_id,
+                    "lot_id"=>$lot_id,
                     "area_id"=>$area_id,
                     "alias" => $alias,
                     "lot_status" => $lot_status,    
@@ -98,7 +140,7 @@
                     array_push($message["body"], "Something went wrong.");
                     return $message;
                   }
-  
+                  }
                   
               case 'POST':
                   // code for post goes here
