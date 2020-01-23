@@ -26,7 +26,7 @@ public $builder_status;
  //function which will read the builders available into the database      
 public function read(){
     // select all query
-    $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, builders_info.email,areas_info.area_name,builders_info.builder_status FROM builders_info LEFT JOIN areas_info ON builders_info.builder_id = areas_info.builder_id";
+    $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact,buiders_info.status, builders_info.email,areas_info.area_name,builders_info.builder_status FROM builders_info LEFT JOIN areas_info ON builders_info.builder_id = areas_info.builder_id";
     // prepare query statement
     $resultSet = mysqli_query($this->connection, $query);
     return $resultSet;
@@ -34,7 +34,7 @@ public function read(){
 // read single builder information
      public function read_single($id){
          
-$query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, builders_info.email,areas_info.area_name,builders_info.status FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.builder_id='$id'";
+$query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, buiders_info.status,builders_info.email,areas_info.area_name,builders_info.status FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.builder_id='$id'";
      $rs = mysqli_query($this->connection,$query);
         if(mysqli_num_rows($rs)){
             $row = mysqli_fetch_array($rs);
@@ -43,6 +43,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
             $this->contact = $row['contact']; 
             $this->area_name = $row['area_name']; 
             $this->email = $row['email']; 
+            $this->status = $row["status"];
        
          return true;
         } 
@@ -65,7 +66,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
     $selectQry = "SELECT email FROM builders_info WHERE email='$this->email'";     
          // query to insert record
     $query = "INSERT INTO
-                builders_info(builder_name,email,builder_status,updated_at,created_at,contact) VALUES(?,?,?,?,?,?) 
+                builders_info(builder_name,email,builder_status,status,updated_at,created_at,contact) VALUES(?,?,?,?,?,?) 
             ";
     $res = mysqli_query($this->connection,$selectQry);
      if($res->num_rows>0){
@@ -74,13 +75,14 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
     else{
     $this->builder_name=htmlspecialchars(strip_tags($this->builder_name));
     $this->builder_status= "passive";
+    $this->status = "active";    
     $this->updated_at= date("Y-m-d H:i:s");
     $this->created_at=date("Y-m-d H:i:s");
     $this->contact=htmlspecialchars(strip_tags($this->contact)); 
     // Prepare query
     $stmt = $this->connection->prepare($query);    
         // bind values
-    $stmt->bind_param("ssssss", $this->builder_name,$this->email,$this->builder_status,$this->updated_at,$this->created_at,$this->contact);
+    $stmt->bind_param("ssssss", $this->builder_name,$this->email,$this->builder_status,$this->status,$this->updated_at,$this->created_at,$this->contact);
 
     // execute query
     if($stmt->execute()){
@@ -167,6 +169,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
                                 'contact' => $this->contact,
                                 'area'=> $this->area_name,
                                 'email'=>$this->email,
+                                'status' => $this->status    
                                     );
                                 array_push($message["body"], $builder_arr);
                                 return $message;
@@ -195,6 +198,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
                                             "contact" =>$contact,
                                             "builder_status" =>$builder_status,
                                             "area" => $area_name,
+                                            "status" => $status,    
                                             "email" => $email
                                             );
 
