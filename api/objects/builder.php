@@ -109,6 +109,25 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
     return false;
 
      }
+     // Update the builder status 
+        public function update_status($id){
+            $id=htmlspecialchars(strip_tags($id));
+            $updateQuery = "UPDATE builders_info
+            SET 
+                status ='active'
+            WHERE area_id=?";
+         $stmt = $this->connection->prepare($updateQuery);
+         $stmt->bind_param("i",$id);
+         // execute query
+        if($stmt->execute()){
+        return true;
+            
+        }
+ 
+        return false;    
+             
+        }
+     
      // update function here
      public function update_builder(){
          $updateQuery = "UPDATE builders_info
@@ -237,12 +256,42 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
             case 'PUT':
             // code here start of put case
             // Read the updated data sent to the api url
-            $data = json_decode(file_get_contents("php://input"));  
-            
-         if(!empty($data->builder_id)&&
-           !empty($data->builder_name)&&
-           !empty($data->status)&&
-           !empty($data->contact)
+            $data = json_decode(file_get_contents("php://input"));
+            $action = $data->action;    
+            if($action="status"){
+                if(!empty($data->builder_id)&&
+                    !empty($data->status)
+                    ) {
+                     $this->builder_id = $data->builder_id;
+                     $this->status = $data->status;
+                            if($this->update_status){
+                             $message["success"] = true;
+                             $message["body"] = array();  
+                                array_push($message["body"], "Updated successfully");
+                                    return $message;
+                                    }
+                        else{
+                        
+                             $message["success"] = false;
+                             $message["body"] = array(); 
+                                array_push($message["body"], "Something went wrong, unable to update");
+                                return $message;
+                                }
+                        }
+                else {
+                     $message["success"] = false;
+                     $message["body"] = array(); 
+                    array_push($message["body"],"Please provide all the data required to update");
+                    return $message; 
+                }
+                 
+            }
+                
+            else {
+                if(!empty($data->builder_id)&&
+                    !empty($data->builder_name)&&
+                    !empty($data->status)&&
+                    !empty($data->contact)
           ){
     // set all the properties 
         $this->builder_id = $data->builder_id; 
@@ -270,6 +319,9 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
                     array_push($message["body"],"Please provide all the data required to update");
                     return $message;    
                 }
+                
+            }    
+        
         // End of put case here        
             break;
             
