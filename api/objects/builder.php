@@ -34,7 +34,7 @@ public function read(){
 // read single builder information
      public function read_single($id){
          
-$query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, buiders_info.status,builders_info.email,areas_info.area_name,builders_info.status FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.builder_id='$id'";
+$query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, builders_info.status,builders_info.email,areas_info.area_name,builders_info.status FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.builder_id='$id'";
      $rs = mysqli_query($this->connection,$query);
         if(mysqli_num_rows($rs)){
             $row = mysqli_fetch_array($rs);
