@@ -152,11 +152,14 @@
                       $this->alias = $lot["alias"];
                       $this->lot_price = $lot["lot_price"];
                       $this->lot_status = $lot["lot_status"];
+                      echo $this->alias;
+                      echo $this->lot_price;
+                      echo $this->lot_status;
                       $this->status = "active";
                         if($this->create()){
                             $message["success"]=true;
                             array_push($message["body"], "Lots added successfully.");
-                            return $message;
+                           
                         }
                       else {
                             $message["success"]=false;
@@ -165,6 +168,7 @@
                           break;
                       }
                   }
+                   return $message;
                       break;
               case 'PUT':
                   $data = json_decode(file_get_contents("php://input"));
