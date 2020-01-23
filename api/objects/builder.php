@@ -115,7 +115,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
             $updateQuery = "UPDATE builders_info
             SET 
                 status ='active'
-            WHERE area_id=?";
+            WHERE builder_id=?";
          $stmt = $this->connection->prepare($updateQuery);
          $stmt->bind_param("i",$id);
          // execute query
@@ -264,7 +264,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
                     ) {
                      $this->builder_id = $data->builder_id;
                      $this->status = $data->status;
-                            if($this->update_status){
+                            if($this->update_status($this->builder_id)){
                              $message["success"] = true;
                              $message["body"] = array();  
                                 array_push($message["body"], "Updated successfully");
