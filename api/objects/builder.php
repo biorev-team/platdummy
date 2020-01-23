@@ -26,7 +26,7 @@ public $builder_status;
  //function which will read the builders available into the database      
 public function read(){
     // select all query
-    $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact,buiders_info.status, builders_info.email,areas_info.area_name,builders_info.builder_status FROM builders_info LEFT JOIN areas_info ON builders_info.builder_id = areas_info.builder_id";
+    $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact,builders_info.status, builders_info.email,areas_info.area_name,builders_info.builder_status FROM builders_info LEFT JOIN areas_info ON builders_info.builder_id = areas_info.builder_id";
     // prepare query statement
     $resultSet = mysqli_query($this->connection, $query);
     return $resultSet;
@@ -203,15 +203,16 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
                                             );
 
                                         array_push($message["body"], $p);
+                                        
                                     }
-                            return $message;       
+                                return $message;   
                 
                 }
         else{               
         $message["success"] = false;
-        $message["data"] = array();
-        array_push($builder["body"],"Data notfound");
-        return message;
+        $message["body"] = array();
+        array_push($message["body"],"Data notfound");
+        return $message;
                 }
             
                     }          
