@@ -66,7 +66,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
     $selectQry = "SELECT email FROM builders_info WHERE email='$this->email'";     
          // query to insert record
     $query = "INSERT INTO
-                builders_info(builder_name,email,builder_status,status,updated_at,created_at,contact) VALUES(?,?,?,?,?,?) 
+                builders_info(builder_name,email,builder_status,status,updated_at,created_at,contact) VALUES(?,?,?,?,?,?,?) 
             ";
     $res = mysqli_query($this->connection,$selectQry);
      if($res->num_rows>0){
