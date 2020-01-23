@@ -18,6 +18,7 @@ public $updated_at;
 public $created_at;
 // email
 public $email;    
+public $builder_status;     
     
      function __construct($conn){
         $this->connection = $conn;
@@ -25,7 +26,7 @@ public $email;
  //function which will read the builders available into the database      
 public function read(){
     // select all query
-    $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, builders_info.email,areas_info.area_name,builders_info.status FROM builders_info LEFT JOIN areas_info ON builders_info.builder_id = areas_info.builder_id";
+    $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_info.contact, builders_info.email,areas_info.area_name,builders_info.builder_status FROM builders_info LEFT JOIN areas_info ON builders_info.builder_id = areas_info.builder_id";
     // prepare query statement
     $resultSet = mysqli_query($this->connection, $query);
     return $resultSet;
@@ -38,7 +39,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
         if(mysqli_num_rows($rs)){
             $row = mysqli_fetch_array($rs);
             $this->builder_name = $row['builder_name'];
-            $this->status = $row['status'];
+            $this->builder_status = $row['builder_status'];
             $this->contact = $row['contact']; 
             $this->area_name = $row['area_name']; 
             $this->email = $row['email']; 
@@ -64,7 +65,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
     $selectQry = "SELECT email FROM builders_info WHERE email='$this->email'";     
          // query to insert record
     $query = "INSERT INTO
-                builders_info(builder_name,email,status,updated_at,created_at,contact) VALUES(?,?,?,?,?,?) 
+                builders_info(builder_name,email,builder_status,updated_at,created_at,contact) VALUES(?,?,?,?,?,?) 
             ";
     $res = mysqli_query($this->connection,$selectQry);
      if($res->num_rows>0){
@@ -72,14 +73,14 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
      }
     else{
     $this->builder_name=htmlspecialchars(strip_tags($this->builder_name));
-    $this->status= "passive";
+    $this->builder_status= "passive";
     $this->updated_at= date("Y-m-d H:i:s");
     $this->created_at=date("Y-m-d H:i:s");
     $this->contact=htmlspecialchars(strip_tags($this->contact)); 
     // Prepare query
     $stmt = $this->connection->prepare($query);    
         // bind values
-    $stmt->bind_param("ssssss", $this->builder_name,$this->email,$this->status,$this->updated_at,$this->created_at,$this->contact);
+    $stmt->bind_param("ssssss", $this->builder_name,$this->email,$this->builder_status,$this->updated_at,$this->created_at,$this->contact);
 
     // execute query
     if($stmt->execute()){
@@ -114,7 +115,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
             $id=htmlspecialchars(strip_tags($id));
             $updateQuery = "UPDATE builders_info
             SET 
-                status ='active'
+                builder_status ='active'
             WHERE builder_id=?";
          $stmt = $this->connection->prepare($updateQuery);
          $stmt->bind_param("i",$id);
@@ -133,7 +134,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
          $updateQuery = "UPDATE builders_info
          SET
          builder_name ='$this->builder_name',
-         status ='$this->status',
+         builder_status ='$this->builder_status',
          contact='$this->contact' 
          WHERE builder_id ='$this->builder_id'";
          if(mysqli_query($this->connection,$updateQuery)){
@@ -162,7 +163,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
                             if($this->read_single($id)){
                                 $builder_arr = array(
                                 'builder_name' => $this->builder_name,
-                                'status' => $this->status,
+                                'builder_status' => $this->builder_status,
                                 'contact' => $this->contact,
                                 'area'=> $this->area_name,
                                 'email'=>$this->email,
@@ -192,7 +193,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
                                             "builder_id" => $builder_id,
                                             "builder_name" => $builder_name,
                                             "contact" =>$contact,
-                                            "status" =>$status,
+                                            "builder_status" =>$builder_status,
                                             "area" => $area_name,
                                             "email" => $email
                                             );
@@ -289,13 +290,13 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
             else {
                 if(!empty($data->builder_id)&&
                     !empty($data->builder_name)&&
-                    !empty($data->status)&&
+                    !empty($data->builder_status)&&
                     !empty($data->contact)
           ){
     // set all the properties 
         $this->builder_id = $data->builder_id; 
         $this->builder_name = $data->builder_name;
-        $this->status = $data->status;
+        $this->builder_status = $data->builder_status;
         $this->contact = $data->contact;
             if($this->update_builder()){
                     $message["success"] = true;

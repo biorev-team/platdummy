@@ -11,6 +11,7 @@ class Area{
     public $created_at;
     public $updated_at;
     public $connection;
+    public $area_status;
     
   // Constructor
     function __construct($conn){
@@ -20,7 +21,7 @@ class Area{
 
     // Select Area table information
     public function read(){
-        $query = "SELECT areas_info.area_name, areas_info.area_id, areas_info.area_address, areas_info.status, builders_info.builder_name FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id";
+        $query = "SELECT areas_info.area_name, areas_info.area_id, areas_info.area_address, areas_info.area_status, builders_info.builder_name FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id";
         $resultSet = mysqli_query($this->connection,$query);
         return $resultSet;
     }
@@ -33,7 +34,7 @@ class Area{
         $this->builder_id = htmlspecialchars(strip_tags($this->builder_id));
         $this->primary_image = htmlspecialchars(strip_tags($this->primary_image));
         $this->images = htmlspecialchars(strip_tags($this->images));
-        $this->status = "passive";
+        $this->area_status = "passive";
         $selectQry = "SELECT area_name FROM areas_info WHERE area_name='$this->area_name'";
         $res = mysqli_query($this->connection,$selectQry);
         if($res->num_rows>0){
@@ -43,12 +44,12 @@ class Area{
         else{
             
              // Query to insert    
-        $query = "INSERT INTO areas_info(builder_id,area_name,area_address,primary_image,images,status) VALUES (?,?,?,?,?,?)";
+        $query = "INSERT INTO areas_info(builder_id,area_name,area_address,primary_image,images,area_status) VALUES (?,?,?,?,?,?)";
         
         $stmt = $this->connection->prepare($query);
     
         // Bind the parameters
-        $stmt->bind_param("isssss",$this->builder_id,$this->area_name,$this->area_address,$this->primary_image,$this->images,$this->status);
+        $stmt->bind_param("isssss",$this->builder_id,$this->area_name,$this->area_address,$this->primary_image,$this->images,$this->area_status);
         if($stmt->execute()){
             $this->area_id = $this->connection->insert_id;
             return true;
@@ -74,12 +75,12 @@ class Area{
 
      }
     public function read_single($id){
-        $query = "SELECT areas_info.area_name, areas_info.area_id, areas_info.area_address, areas_info.status, builders_info.builder_name FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id WHERE areas_info.area_id='$id'" ;
+        $query = "SELECT areas_info.area_name, areas_info.area_id, areas_info.area_address, areas_info.area_status, builders_info.builder_name FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id WHERE areas_info.area_id='$id'" ;
         $rs = mysqli_query($this->connection,$query);
         if(mysqli_num_rows($rs)){
             extract(mysqli_fetch_array($rs));
             $this->area_id = $area_id;
-            $this->status = $status;
+            $this->area_status = $area_status;
             $this->area_name = $area_name;
             $this->primary_image = $primary_image;
             $this->images = $images;
@@ -97,7 +98,7 @@ class Area{
             $id=htmlspecialchars(strip_tags($id));
             $updateQuery = "UPDATE areas_info
             SET 
-                status ='active'
+                area_status ='active'
             WHERE area_id=?";
          $stmt = $this->connection->prepare($updateQuery);
          $stmt->bind_param("i",$id);
@@ -134,7 +135,7 @@ class Area{
                                 'area_name' => $this->area_name,
                                 'primary_image'=> $this->primary_image,
                                 'image'=>$this->image,
-                                'status' =>$this->status,
+                                'area_status' =>$this->area_status,
                                 'area_address' =>$this->area_address
                                     );
                                 array_push($message["body"], $single_data);
@@ -162,7 +163,7 @@ class Area{
                     "area_address" => $area_address,    
                     "primary_image" =>$primary_image,
                     "images" => $images,
-                    "status" => $status   
+                    "area_status" => $area_status   
                     );
                         array_push($message["body"],$p);
                     
