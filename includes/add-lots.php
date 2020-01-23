@@ -221,7 +221,7 @@
                         alert("Please select file");
                     }
                     else{
-//                        console.log(result);
+                        console.log(result);
                         Swal.fire({
                                 title: '',
                                 text: 'Imported Successfuly',
@@ -250,6 +250,7 @@
                 dataType:"json",
                 
                 success:function(result){
+//                    console.log(result);
                     if(result["success"]){
                        Swal.fire({
                                 title: '',
@@ -272,7 +273,7 @@
                              dataType: "json",
                              
                              success:function(result){
-                                 console.log(result);
+//                                 console.log(result);
                              }
                          })
                     }

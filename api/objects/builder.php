@@ -257,7 +257,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
             // code here start of put case
             // Read the updated data sent to the api url
             $data = json_decode(file_get_contents("php://input"));
-            $action = $data->action;    
+            $action = $data->action;     
             if($action="status"){
                 if(!empty($data->builder_id)
                     ) {

@@ -51,6 +51,9 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
                 color: #007bff;
                 
             }
+             .btn-outline-primary, .btn-outline-danger{
+                margin: 0px 5px ;    
+            } 
     </style>
         
 </head>

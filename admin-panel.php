@@ -72,7 +72,11 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
-
+        <style>
+            .btn-outline-primary, .btn-outline-danger{
+                margin: 0px 5px ;    
+            }        
+        </style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -249,7 +253,7 @@ $(document).ready(function(){
                 url: "api/index.php?module=builder",
                 
                 success: function(result){
-//                    console.log(result);
+                    console.log(result);
                     var id =0;
                     var snumber = 1;
                     $.each(result["body"], function(){
@@ -261,6 +265,9 @@ $(document).ready(function(){
                         var builderArea     = result["body"][id]["area"];
                         var email           = result["body"][id]["email"];
                         
+                        if(builderArea == null){
+                            builderArea = "Not Assigned Yet";
+                        }
 //                        console.log(builderStatus);
                             
                             

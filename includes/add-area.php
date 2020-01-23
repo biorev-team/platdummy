@@ -279,7 +279,19 @@
                                 
                                 
                                 if(result["success"]){
-                                
+//                                    console.log("test1");
+                                    $.ajax({
+                                        type: "PUT",
+                                        url: "../api/index.php?module=builder",
+                                        data: JSON.stringify({
+                                            "builder_id": builderId,
+                                            "action": "status"
+                                        }),
+                                        
+                                        success: function(data){
+                                            
+                                            console.log(data);
+
                                     Swal.fire({
                                         title: '',
                                         text: result["body"],
@@ -293,7 +305,9 @@
                                             }
                                     })
 
-                                
+                                  }
+                                        
+                                    })
                                 }
                                 else{
                                     
