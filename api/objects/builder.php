@@ -82,7 +82,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
     // Prepare query
     $stmt = $this->connection->prepare($query);    
         // bind values
-    $stmt->bind_param("ssssss", $this->builder_name,$this->email,$this->builder_status,$this->status,$this->updated_at,$this->created_at,$this->contact);
+    $stmt->bind_param("sssssss", $this->builder_name,$this->email,$this->builder_status,$this->status,$this->updated_at,$this->created_at,$this->contact);
 
     // execute query
     if($stmt->execute()){
