@@ -284,7 +284,6 @@ $conn = $dbConn->connect();
         $.ajax({
                 type: "GET",
                 url: "../api/index.php?module=builder&id="+builderId,
-                data: "id=" + builderId,
                 success: function(result){
                     console.log(result);
                     $("#name").val(result["body"][0]["builder_name"]);
@@ -313,7 +312,7 @@ $conn = $dbConn->connect();
                 data: JSON.stringify({
                     "builder_id": builderId,  
                     "builder_name": name,
-                    "status":status,
+                    "builder_status":status,
                     "contact":contact
             }),
                 dataType:"json",

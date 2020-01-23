@@ -261,19 +261,21 @@ $(document).ready(function(){
                         var builderId       = result["body"][id]["builder_id"];
                         var builderName     = result["body"][id]["builder_name"];
                         var builderContact  = result["body"][id]["contact"];
-                        var builderStatus   = result["body"][id]["status"];
+                        var status          = result["body"][id]["status"];
                         var builderArea     = result["body"][id]["area"];
                         var email           = result["body"][id]["email"];
+                        var builderStatus   = result["body"][id]["builder_status"];
                         
                         if(builderArea == null){
                             builderArea = "Not Assigned Yet";
                         }
 //                        console.log(builderStatus);
+                        if(status == "active"){    
                             
+                        $("tbody").append("<tr><td>" + snumber + "</td><td>" +builderName + "</td><td>" + email +"</td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td><div class='btn-group'><button type='button' class='btn btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button><button type='button' class='btn btn-outline-danger delete' value=" + builderId + " >Delete</button></div></td></tr>");
+                         snumber++;
                             
-                        $("tbody").append("<tr><td>" + snumber  + "</td><td>" +builderName + "</td><td>" + email +"</td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td><div class='btn-group'><button type='button' class='btn btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button><button type='button' class='btn btn-outline-danger delete' value=" + builderId + " >Delete</button></div></td></tr>");
-                         snumber++
-                            
+                        }
                        
                     id++;
                        });

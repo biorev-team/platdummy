@@ -265,7 +265,6 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
             $data = json_decode(file_get_contents("php://input"));
             $action = $data->action;     
             if($action=="status"){
-                echo $action;
                 if(!empty($data->builder_id)
                     ) {
                      $this->builder_id = $data->builder_id;

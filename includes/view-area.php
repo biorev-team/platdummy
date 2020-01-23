@@ -237,6 +237,7 @@ session_start();
                 var counter = 0;
                 var sNumber = 1;
                        $.each(result["body"], function(){
+//                           console.log(result);
                             var lotNumber = result["body"][counter]["alias"];
                             var lotStatus = result["body"][counter]["lot_status"];
                             var lotPrice  = result["body"][counter]["lot_price"];

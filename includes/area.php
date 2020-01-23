@@ -260,16 +260,17 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
                         var areaId      = result["body"][counter]["area_id"];
                         var areaAddress = result["body"][counter]["area_address"];
                         var builderName = result["body"][counter]["builder_name"];
-                        var areaStatus  = result["body"][counter]["status"];
+                        var areaStatus  = result["body"][counter]["area_status"];
+                        var status      = result["body"][counter]["status"];
                         
-                            if(areaStatus == "active"){
+                            if(status == "active" && areaStatus == "active"){
                                 
                                 $("tbody").append('<tr><td>' + sNumber + '</td><td>'+areaName+ '</td><td>'+areaAddress+'</td><td>'+builderName+'</td><td>test</td><td><div class="btn-group"><button type="button" class="btn btn-outline-primary view" value="' + areaId + '">View</button><button type="button" class="btn btn-outline-danger delete" value="'+areaId+'">Delete</button></div></td></tr>');
                                     sNumber++;
                             }
                         
 //                    DISPLAYING PASSIVE AREA LIST 
-                                if(areaStatus == "passive"){    
+                                if(areaStatus == "passive" && status == "active"){    
                     $("#selectArea").append('<option value = "' +areaId + ' ">'+ areaName + '</option>');     
                     }     
                         counter++;

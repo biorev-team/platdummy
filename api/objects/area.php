@@ -50,7 +50,7 @@ class Area{
         $stmt = $this->connection->prepare($query);
     
         // Bind the parameters
-        $stmt->bind_param("isssss",$this->builder_id,$this->area_name,$this->area_address,$this->primary_image,$this->images,$this->area_status,$this->status);
+        $stmt->bind_param("issssss",$this->builder_id,$this->area_name,$this->area_address,$this->primary_image,$this->images,$this->area_status,$this->status);
         if($stmt->execute()){
             $this->area_id = $this->connection->insert_id;
             return true;
