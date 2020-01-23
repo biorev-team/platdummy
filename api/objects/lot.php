@@ -19,8 +19,8 @@
          
     } 
       // Select Area table information
-    public function read(){
-        $query = "SELECT * FROM lots";
+    public function read($id){
+        $query = "SELECT * FROM lots WHERE area_id='$id'";
         $resultSet = mysqli_query($this->connection,$query);
         return $resultSet;
     }
@@ -92,29 +92,7 @@
           switch($requestMethod){
               case 'GET':
                    if(!empty($id)){
-                $message["success"]=true;
-                $message["count"] = 1;
-                if($this->read_single($id)){
-                $single_data = array(
-                                 "lot_id"=>$this->lot_id,
-                                 "area_id" =>$this->area_id,
-                                 "alias" => $this->alias,
-                                 "lot_status" => $this->lot_status,    
-                                 "lot_price" =>$this->lot_price,
-                                 "status" => $this->status   
-                                    );
-                                array_push($message["body"], $single_data);
-                                return $message;
-                    
-                }
-                 else{
-                        $message["success"] = false;
-                        array_push($message["body"], "Id does not exist ");
-                        return $message;  
-                 }
-            } 
-                  else {
-                $stmt = $this->read();
+                $stmt = $this->read($id);
                 $count = $stmt->num_rows;
                 if($count>0){
                     $message["success"]=true;
@@ -140,6 +118,11 @@
                     array_push($message["body"], "Something went wrong.");
                     return $message;
                   }
+            } 
+                  else {
+                      $message["success"]=false;
+                      array_push($message["body"], "Please provide ID.");
+                        return $message;
                   }
                   
               case 'POST':
