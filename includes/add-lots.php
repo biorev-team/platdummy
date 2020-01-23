@@ -221,7 +221,15 @@
                         alert("Please select file");
                     }
                     else{
-                        console.log(result);
+//                        console.log(result);
+                        Swal.fire({
+                                title: '',
+                                text: 'Imported Successfuly',
+                                icon: 'success',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                                })
+                        
                         lots = result;
                         
                     }

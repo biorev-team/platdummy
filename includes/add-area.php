@@ -139,7 +139,7 @@
                     <div class="form-group">
                   <label>Assign Builder</label>
                   <select class="form-control select2" id="selectBuilder">
-                    <option selected disabled>Nothing Selected</option>
+                    <option selected disabled value="">Nothing Selected</option>
                   </select>
                 </div>
                             </div>
@@ -259,7 +259,7 @@
          $("#addButton").click(function(){
              var areaName   = $("#name").val();
              var areaAddress = $("#address").val();
-
+//             console.log(builderId);
                         $.ajax({
                             type: "POST",
                             url : "../api/index.php?module=area",
@@ -273,7 +273,7 @@
                             
                             success: function(result){
                                 
-                                console.log(result);
+//                                console.log(result);
                                 
                                 var areaId = result["id"];
                                 

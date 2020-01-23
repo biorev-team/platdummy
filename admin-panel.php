@@ -263,11 +263,10 @@ $(document).ready(function(){
                         
 //                        console.log(builderStatus);
                             
-                            if( builderStatus == "active" ){
                             
                         $("tbody").append("<tr><td>" + snumber  + "</td><td>" +builderName + "</td><td>" + email +"</td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td><div class='btn-group'><button type='button' class='btn btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button><button type='button' class='btn btn-outline-danger delete' value=" + builderId + " >Delete</button></div></td></tr>");
                          snumber++
-                            }
+                            
                        
                     id++;
                        });

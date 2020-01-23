@@ -72,7 +72,7 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
      }
     else{
     $this->builder_name=htmlspecialchars(strip_tags($this->builder_name));
-    $this->status= "active";
+    $this->status= "passive";
     $this->updated_at= date("Y-m-d H:i:s");
     $this->created_at=date("Y-m-d H:i:s");
     $this->contact=htmlspecialchars(strip_tags($this->contact)); 
