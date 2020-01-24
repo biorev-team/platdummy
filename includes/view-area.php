@@ -241,12 +241,14 @@ session_start();
                             var lotNumber = result["body"][counter]["alias"];
                             var lotStatus = result["body"][counter]["lot_status"];
                             var lotPrice  = result["body"][counter]["lot_price"];
-                           var lotId      = result["body"][counter]["lot_id"];
+                            var lotId     = result["body"][counter]["lot_id"];
+//                           console.log(lotId);
                            
-                           $("tbody").append('<tr><td>'+sNumber+'</td><td><input type = "text" value=' + lotNumber + ' class="inputs" disabled name="number"></td><td><input type = "text" value=' + lotStatus + ' class="inputs" disabled name="status" ></td><td><input type = "text" value=' + lotPrice +' class="inputs" disabled name="price" ></td><td><button type="button" class="btn btn-outline-primary edit" value=' + counter +' name="edit">Edit</button><button style="visibility:hidden;" type="button" class="btn btn-outline-success save" value=' +counter+' name="save">Save</button><button style="visibility:hidden;" type="button" class="btn btn-outline-danger cancel" value=' + counter + ' name="cancel">Cancel</button></td></tr>');
+                           $("tbody").append('<tr><td><p style="display:none;" class="lots" value = "">'+lotId+'</p>'+sNumber+'</td><td><input type = "text" value=' + lotNumber + ' class="inputs" disabled name="number"></td><td><input type = "text" value=' + lotStatus + ' class="inputs" disabled name="status" ></td><td><input type = "text" value=' + lotPrice +' class="inputs" disabled name="price" ></td><td><button type="button" class="btn btn-outline-primary edit" value=' + counter +' name="edit">Edit</button><button style="visibility:hidden;" type="button" class="btn btn-outline-success save" value=' +counter+' name="save">Save</button><button style="visibility:hidden;" type="button" class="btn btn-outline-danger cancel" value=' + counter + ' name="cancel">Cancel</button></td></tr>');
                             
                            counter++;
                            sNumber++;
+                            });
                             
                            //        EDIT BUTTON CLICK
         $(".edit").click(function(){
@@ -272,9 +274,9 @@ session_start();
             var lotNumber = $(this).parent().siblings().find("input[name=number]").val();
             var lotStatus = $(this).parent().siblings().find("input[name=status]").val();
             var lotPrice = $(this).parent().siblings().find("input[name=price]").val();
+            var lotId    = $(this).parent().siblings().find("p").text();
             
-            console.log(lotNumber);
-            console.log(lotId);
+            var save = $(this);
             
             $.ajax({
                 type:"PUT",
@@ -290,19 +292,21 @@ session_start();
                     
                     if(result["success"]){
                     
-                    $(this).css("visibility", "hidden");
-            $(this).siblings(".edit").css("visibility","visible");
-            $(this).siblings(".cancel").css("visibility", "hidden");
-            $(this).parent().siblings().find("input[type=text]").prop('disabled', true);
-            $(this).parent().siblings().find("input[type=text]").addClass("inputs");
-            $(this).parent().parent().css("background-color", "inherit");
+                        $(save).css("visibility", "hidden");
+            $(save).siblings(".edit").css("visibility","visible");
+            $(save).siblings(".cancel").css("visibility", "hidden");
+            $(save).parent().siblings().find("input[type=text]").prop('disabled', true);
+            $(save).parent().siblings().find("input[type=text]").addClass("inputs");
+            $(save).parent().parent().css("background-color", "inherit"); 
                     
                      Swal.fire({
                                 title: '',
                                 text: result["body"],
                                 icon: 'success',
+                                showCancelButton : true,
                                 confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'Back to Area list'
+                                confirmButtonText: 'Back to Area list',
+                                cancelButtonColor: "#d33",
                                 }).then((next) => {
                                 if (next.value) {
                                     window.location.href="area.php";
@@ -326,7 +330,7 @@ session_start();
             })
         });
 
-                       });
+                      
                 
       
         }

@@ -188,6 +188,7 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
                       <th>Email</th>
                       <th>Contact</th>
                       <th>Area</th>
+                      <th>Builder Status</th>
                       <th>Action</th>
                     </tr>
                   </thead>
@@ -272,7 +273,7 @@ $(document).ready(function(){
 //                        console.log(builderStatus);
                         if(status == "active"){    
                             
-                        $("tbody").append("<tr><td>" + snumber + "</td><td>" +builderName + "</td><td>" + email +"</td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td><div class='btn-group'><button type='button' class='btn btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button><button type='button' class='btn btn-outline-danger delete' value=" + builderId + " >Delete</button></div></td></tr>");
+                        $("tbody").append("<tr><td>" + snumber + "</td><td>" +builderName + "</td><td>" + email +"</td><td>" +builderContact+ "</td><td>" +builderArea +"</td><td>" + builderStatus + "</td><td><div class='btn-group'><button type='button' class='btn btn-outline-primary edit' value=" + builderId + " name='edit'>Edit</button><button type='button' class='btn btn-outline-danger delete' value=" + builderId + " >Delete</button></div></td></tr>");
                          snumber++;
                             
                         }

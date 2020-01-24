@@ -138,7 +138,7 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
                       </div>
                   <div class="col-sm-8">
                 <select class="form-control select2" id="selectArea">
-                    <option selected disabled>Assign lots to pending areas</option>
+                    <option selected disabled>Assign lots to unpublished areas</option>
                 </select> 
                       </div>
                   </div>
