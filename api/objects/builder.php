@@ -60,20 +60,36 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
     $stmt = $this->connection->prepare($query);
     date_default_timezone_set('Asia/Calcutta');
     // sanitize
-    $this->email = htmlspecialchars(strip_tags($this->email));     
+    $this->email = strtolower(htmlspecialchars(strip_tags($this->email)));     
        
           //SELECT query before inserting the builder that if builder email is already registered
-    $selectQry = "SELECT email FROM builders_info WHERE email='$this->email'";     
+    $selectQry = "SELECT email,status FROM builders_info WHERE email='$this->email'";     
          // query to insert record
     $query = "INSERT INTO
                 builders_info(builder_name,email,builder_status,status,updated_at,created_at,contact) VALUES(?,?,?,?,?,?,?) 
             ";
     $res = mysqli_query($this->connection,$selectQry);
      if($res->num_rows>0){
-         return false;
+         $row = mysqli_fetch_array($res);
+         $checkStatus =$row['status'];
+         if($checkStatus=="passive"){
+             $updateQry = "UPDATE builders_info
+             SET status = 'active' ,
+              builder_name ='$this->builder_name',
+              builder_status ='passive',
+              contact='$this->contact' 
+             WHERE email = '$this->email'";
+             $stmt = mysqli_query($this->connection,$updateQry);
+             return true;
+         }
+         else{
+            return false; 
+         }
+         
      }
     else{
-    $this->builder_name=htmlspecialchars(strip_tags($this->builder_name));
+        
+    $this->builder_name=strtolower(htmlspecialchars(strip_tags($this->builder_name)));
     $this->builder_status= "passive";
     $this->status = "active";    
     $this->updated_at= date("Y-m-d H:i:s");
@@ -139,7 +155,8 @@ $query = "SELECT builders_info.builder_id, builders_info.builder_name, builders_
          builder_status ='$this->builder_status',
          contact='$this->contact' 
          WHERE builder_id ='$this->builder_id'";
-         if(mysqli_query($this->connection,$updateQuery)){
+         $stmt = mysqli_query($this->connection,$updateQuery);
+         if(mysqli_num_rows($stmt)>0){
              return true;
          }
          else {

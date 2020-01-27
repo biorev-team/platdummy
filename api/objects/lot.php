@@ -45,21 +45,30 @@
      }
     //Function to update lots 
      public function update($id){
-        
-         
-        $updateQuery = "UPDATE lots 
+        $selectQuery = "SELECT lot_id FROM lots WHERE lot_id ='$id'";
+         $res = mysqli_query($this->connection,$selectQuery);
+         if(mysqli_num_rows($res)>0){
+             $updateQuery = "UPDATE lots 
         
                    SET alias='$this->alias',
                         lot_price='$this->lot_price',
                         lot_status='$this->lot_status'
                         WHERE lot_id='$id'
                         ";
+         
          if(mysqli_query($this->connection,$updateQuery)){
              return true;
          }
          else{
              return false;
-                }
+                }  
+             
+         }
+            
+            else { 
+               return false;
+            }
+       
      }
 //     INSERT LOT INFORMATION
      public function create(){
@@ -156,7 +165,8 @@
                   if(
                     !empty($data->alias) &&
                     !empty($data->lot_price)&&
-                    !empty($data->lot_status)
+                    !empty($data->lot_status)&&
+                    !empty($data->lot_id)  
                                           
                   )
                   {
@@ -175,7 +185,7 @@
                       else {
                           $message["success"] = false;
                           $message["body"] = array();  
-                          array_push($message["body"], "Something went wrong, could not updated");
+                          array_push($message["body"], "ID does not exist");
                           return $message;
                           
                       }
@@ -190,7 +200,7 @@
                   }
                   else {
                        $message["success"] = false;
-                        array_push($message["body"], "Data is in complete ");
+                        array_push($message["body"], "Data is incomplete ");
                         return $message; 
                       
                       

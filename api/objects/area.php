@@ -12,6 +12,7 @@ class Area{
     public $updated_at;
     public $connection;
     public $area_status;
+    public $builder_id;
     
   // Constructor
     function __construct($conn){
@@ -21,7 +22,7 @@ class Area{
 
     // Select Area table information
     public function read(){
-        $query = "SELECT areas_info.area_name, areas_info.area_id, areas_info.area_address, areas_info.area_status,areas_info.status ,builders_info.builder_name FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id";
+        $query = "SELECT areas_info.area_name,builders_info.builder_id, areas_info.area_id, areas_info.area_address, areas_info.area_status,areas_info.status ,builders_info.builder_name FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id";
         $resultSet = mysqli_query($this->connection,$query);
         return $resultSet;
     }
@@ -29,7 +30,7 @@ class Area{
     public function create(){
         // Check if the area name already exist in the data base.
         // select query
-        $this->area_name = htmlspecialchars(strip_tags($this->area_name));
+        $this->area_name = strtolower(htmlspecialchars(strip_tags($this->area_name)));
         $this->area_address = htmlspecialchars(strip_tags($this->area_address));
         $this->builder_id = htmlspecialchars(strip_tags($this->builder_id));
         $this->primary_image = htmlspecialchars(strip_tags($this->primary_image));
@@ -76,7 +77,7 @@ class Area{
 
      }
     public function read_single($id){
-        $query = "SELECT areas_info.area_name, areas_info.area_id, areas_info.area_address, areas_info.area_status, areas_info.status ,builders_info.builder_name FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id WHERE areas_info.area_id='$id'" ;
+        $query = "SELECT areas_info.area_name, areas_info.area_id, areas_info.area_address, areas_info.area_status, areas_info.status ,builders_info.builder_name,builders_info.builder_id FROM areas_info INNER JOIN builders_info ON areas_info.builder_id=builders_info.builder_id WHERE areas_info.area_id='$id'" ;
         $rs = mysqli_query($this->connection,$query);
         if(mysqli_num_rows($rs)){
             extract(mysqli_fetch_array($rs));
@@ -88,6 +89,7 @@ class Area{
             $this->builder_name = $builder_name;
             $this->area_address = $area_address;
             $this->status = $status;
+            $this->builder_id = $builder_id;
             
             return true;
         }
@@ -139,7 +141,8 @@ class Area{
                                 'image'=>$this->image,
                                 'area_status' =>$this->area_status,
                                 'status' =>$this->status,
-                                'area_address' =>$this->area_address
+                                'area_address' =>$this->area_address,
+                                'builder_id' => $this->builder_id
                                     );
                                 array_push($message["body"], $single_data);
                                 return $message;
@@ -167,7 +170,8 @@ class Area{
                     "primary_image" =>$primary_image,
                     "images" => $images,
                     "area_status" => $area_status,
-                    "status" => $status    
+                    "status" => $status,
+                    "builder_id" =>$builder_id    
                     );
                         array_push($message["body"],$p);
                     
