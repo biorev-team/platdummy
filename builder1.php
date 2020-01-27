@@ -6,7 +6,7 @@ $conn = $dbConn->connect();
 session_start();
     $builder_id = $_SESSION["BUILDER_ID"];
     
-   $builderInfoQuery = "SELECT builders_info.builder_name, builders_info.contact, areas_info.area_name, areas_info.lots FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active' AND builders_info.builder_id = '$builder_id'";
+   $builderInfoQuery = "SELECT builders_info.builder_name, builders_info.contact, areas_info.area_name FROM builders_info INNER JOIN areas_info ON builders_info.builder_id = areas_info.builder_id WHERE builders_info.status ='active' AND areas_info.status='active' AND builders_info.builder_id = '$builder_id'";
 
 $builderInfoResult = mysqli_query($conn, $builderInfoQuery);
 

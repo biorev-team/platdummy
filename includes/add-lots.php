@@ -197,12 +197,13 @@
         var url_string = window.location.href;
         var url = new URL(url_string);
         var areaId = url.searchParams.get("id");
+        var builderId = url.searchParams.get("bId");
         
 //        Import File
         
                 $("#import").click(function(){
                     
-                    var file_data = $('#file').prop('files')[0];   
+            var file_data = $('#file').prop('files')[0];   
             var form_data = new FormData();                  
             form_data.append('file', file_data);
             $.ajax({
@@ -273,12 +274,27 @@
                              dataType: "json",
                              
                              success:function(result){
+                                 
+                                 $.ajax({
+                                    type: "PUT",
+                                    url: "../api/index.php?module=builder",
+                                    data: JSON.stringify({
+                                        "builder_id": builderId,
+                                        "action": "status"
+                                    }),
+                                        
+                                    success: function(data){
+                                            
+                                            console.log(data);
+                                    }
+                            })
 //                                 console.log(result);
                              }
+                         
                          })
-                    }
+                            
+                        } 
                     
-                   
                     
                     else{
                         Swal.fire({
@@ -288,8 +304,9 @@
                                 confirmButtonColor: '#d33',
                                 confirmButtonText: 'Retry'
                                 })
+                        }
                     }
-                }
+                
                 
             })    
         });

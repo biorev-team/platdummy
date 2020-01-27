@@ -174,7 +174,6 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
                       <th>Area </th>
                       <th>Address</th>
                       <th>Builder Assigned</th>
-                      <th>Total Lots</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -262,16 +261,17 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
                         var builderName = result["body"][counter]["builder_name"];
                         var areaStatus  = result["body"][counter]["area_status"];
                         var status      = result["body"][counter]["status"];
+                        var builderId   = result["body"][counter]["builder_id"];
                         
                             if(status == "active" && areaStatus == "active"){
                                 
-                                $("tbody").append('<tr><td>' + sNumber + '</td><td>'+areaName+ '</td><td>'+areaAddress+'</td><td>'+builderName+'</td><td>test</td><td><div class="btn-group"><button type="button" class="btn btn-outline-primary view" value="' + areaId + '">View</button><button type="button" class="btn btn-outline-danger delete" value="'+areaId+'">Delete</button></div></td></tr>');
+                                $("tbody").append('<tr><td>' + sNumber + '</td><td>'+areaName+ '</td><td>'+areaAddress+'</td><td>'+builderName+'</td><td><div class="btn-group"><button type="button" class="btn btn-outline-primary view" value="' + areaId + '">View</button><button type="button" class="btn btn-outline-danger delete" value="'+areaId+'">Delete</button></div></td></tr>');
                                     sNumber++;
                             }
                         
 //                    DISPLAYING PASSIVE AREA LIST 
                                 if(areaStatus == "passive" && status == "active"){    
-                    $("#selectArea").append('<option value = "' +areaId + ' ">'+ areaName + '</option>');     
+                    $("#selectArea").append('<option label = "'+builderId+'" value = "' +areaId + ' ">'+ areaName + '</option>');     
                     }     
                         counter++;
                         
@@ -281,8 +281,11 @@ while( $adminRow = mysqli_fetch_array($adminResult) ){
             
             $( "#selectArea option:selected" ).each(function() {
                         selectedAreaId = $(this).val();
+                        var builderId = $(this).attr('label');
+//                        console.log(builderId);
+                        
 //                console.log(selectedAreaId);
-                    window.location.href="add-lots.php?id="+selectedAreaId+"";
+                    window.location.href="add-lots.php?id="+selectedAreaId+"&bId="+builderId+"";
                     });
             });
                     

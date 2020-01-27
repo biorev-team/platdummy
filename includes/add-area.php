@@ -147,7 +147,7 @@
                   <div class="form-group">
                     <label> Primary Image:</label>
              <div class="margin-bottom margin-top">
-                 <input type="file" class="form-control" name="fileToUpload" id="avatar"><br>
+                 <input type="file" class="form-control" name="file" id="avatar"><br>
                  <label id="labelForAvatar" for="avatar">
                      <img src="../images/placeholder-logo.png" id="imgupload">
                  </label>
@@ -214,7 +214,7 @@
     });
         
 //        Defining Variables
-        var imageAddress = "G:/Ampps/www/platdummy/images/primary_images/";
+//        var imageAddress = "G:/Ampps/www/svg/images/primary_images/";
         var selectedOption;
         var pImageName;
         var builderId;
@@ -251,15 +251,45 @@
             }).trigger( "change" );
          
         
-                $("#avatar").change(function(){
-                pImageName = $('#avatar').val().split('\\').pop() + $.now();   
-                });
+//                $("#avatar").change(function(){
+//                pImageName = $('#avatar').val().split('\\').pop().split(".").shift() + $.now() + "." + $('#avatar').val().split('\\').pop().split(".").pop(); 
+////                    console.log(pImageName);
+//                });
         
 //             Insert Area AJAX
          $("#addButton").click(function(){
              var areaName   = $("#name").val();
              var areaAddress = $("#address").val();
 //             console.log(builderId);
+             
+//             Uploading Image
+             var file_data = $("#avatar").prop("files")[0];
+//             console.log(file_data);
+             var form_data = new FormData();
+             form_data.append('file', file_data);
+//             console.log(form_data);
+                $.ajax({
+                    type:"POST",
+                    url:"../api/include/upload.php",
+                    data: form_data,
+                    contentType: false,
+                    cache: false,
+                    processData:false,  
+                    
+                    success:function(result){
+                            
+                        if(result == "error"){
+                            Swal.fire({
+                                        title: '',
+                                        text: 'Upload failed, try again',
+                                        icon: 'success',
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'OK'
+                                    })
+                        }
+                        else{
+                           
                         $.ajax({
                             type: "POST",
                             url : "../api/index.php?module=area",
@@ -267,7 +297,7 @@
                                 "builder_id": builderId,
                                 "area_name" : areaName,
                                 "area_address" : areaAddress,
-                                "primary_image" : imageAddress + pImageName 
+                                "primary_image" : result 
                             }),
                             dataType :"json",
                             
@@ -280,17 +310,6 @@
                                 
                                 if(result["success"]){
 //                                    console.log("test1");
-                                    $.ajax({
-                                        type: "PUT",
-                                        url: "../api/index.php?module=builder",
-                                        data: JSON.stringify({
-                                            "builder_id": builderId,
-                                            "action": "status"
-                                        }),
-                                        
-                                        success: function(data){
-                                            
-                                            console.log(data);
 
                                     Swal.fire({
                                         title: '',
@@ -301,13 +320,11 @@
                                         confirmButtonText: 'OK'
                                     }).then((val) => {
                                         if (val.value) {
-                                                window.location.href="add-lots.php?id=" +areaId +"";
+                                                window.location.href="add-lots.php?id=" +areaId +"&bId="+builderId+"";
                                             }
                                     })
 
-                                  }
-                                        
-                                    })
+                                  
                                 }
                                 else{
                                     
@@ -320,6 +337,10 @@
                                 }
                             }
                         })  
+                        }
+                        
+                        }
+                })
                     });
         
   

@@ -3,8 +3,6 @@ include("dbConnect.php");
 $db_conn = new DB_Connect();
 $conn =$db_conn->connect();
 
-
-
  if(!empty($_FILES["file"]["name"]))  
  {
       $array = array();
